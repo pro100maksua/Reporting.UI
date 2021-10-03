@@ -1,0 +1,30 @@
+<h3 class="page-title">Публікації</h3>
+
+<div class="flex-row">
+  <tui-input
+    class="page-search"
+    icon="tuiIconSearch"
+    iconAlign="left"
+    [tuiTextfieldCleaner]="true"
+    [tuiTextfieldLabelOutside]="true"
+    [formControl]="searchCtrl"
+  >
+    Пошук
+  </tui-input>
+</div>
+
+<div class="flex-row">
+  <button tuiButton appearance="outline" (click)="addPublication()">
+    Додати Публікацію
+  </button>
+</div>
+
+<div class="grid-wrapper">
+  <ag-grid-angular
+    style="width: 100%; height: 100%"
+    class="ag-theme-alpine"
+    [rowData]="publications"
+    [gridOptions]="gridOptions"
+  >
+  </ag-grid-angular>
+</div>
