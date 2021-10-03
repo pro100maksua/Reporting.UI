@@ -71,8 +71,8 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   };
 
   constructor(
-    @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,
-    @Inject(Injector) private readonly injector: Injector
+    @Inject(TuiDialogService) private dialogService: TuiDialogService,
+    @Inject(Injector) private injector: Injector
   ) {
     super();
   }

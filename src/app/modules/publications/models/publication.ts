@@ -8,5 +8,15 @@ export interface Publication {
   endPage: string;
   pagesCount: number;
   printedPagesCount?: number;
+  doi?: string;
+  publisher?: string;
+  isbn?: string;
+  abstract?: string;
+  articleNumber?: string;
+  pdfUrl?: string;
+  htmlUrl?: string;
+  conferenceLocation?: string;
+  citingPaperCount?: number;
+  citingPatentCount?: number;
   authors: Author[];
 }

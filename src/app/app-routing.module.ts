@@ -1,11 +1,16 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
 const routes: Routes = [
   {
-    path: 'publications',
+    path: "",
+    redirectTo: "publications",
+    pathMatch: "full",
+  },
+  {
+    path: "publications",
     loadChildren: () =>
-      import('../app/modules/publications/publications.module').then(
+      import("../app/modules/publications/publications.module").then(
         (m) => m.PublicationsModule
       ),
   },
