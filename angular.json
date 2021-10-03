@@ -1,5 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "schematics": {
+    "@schematics/angular": {
+      "component": {
+        "changeDetection": "OnPush"
+      }
+    }
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -110,9 +117,21 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "reporting-ui"
+  "defaultProject": "reporting-ui",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

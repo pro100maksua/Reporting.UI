@@ -1,0 +1,38 @@
+.header {
+  box-shadow: 0 0.125rem 1rem rgb(0 0 0 / 8%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  height: 3.9375rem;
+  align-items: center;
+  padding: 0 1.25rem;
+  background: var(--tui-base-01);
+  border-bottom: 1px solid var(--tui-base-03);
+  z-index: 1;
+}
+
+.page-wrapper {
+  @apply h-screen w-screen relative z-0 pt-16;
+}
+
+.page-content {
+  @apply h-full w-full pt-4 px-4;
+
+  > *:not(router-outlet) {
+    @apply flex flex-col h-full w-full;
+  }
+}
+
+.page-title {
+  @apply font-bold text-2xl mb-4;
+}
+
+.flex-row {
+  @apply flex flex-wrap gap-5 mb-4;
+}
+
+.grid-wrapper {
+  @apply flex-1 mb-2;
+}

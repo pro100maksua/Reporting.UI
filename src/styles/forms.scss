@@ -1,0 +1,18 @@
+tui-wrapper[data-appearance="textfield"][data-appearance="textfield"]._invalid {
+  &:after {
+    color: var(--tui-error-fill);
+  }
+}
+
+.page-search {
+  width: 300px;
+
+  tui-wrapper[data-appearance="textfield"][data-appearance="textfield"] {
+    box-shadow: none;
+
+    &:after {
+      color: var(--tui-base-03);
+      border-width: 1px;
+    }
+  }
+}
