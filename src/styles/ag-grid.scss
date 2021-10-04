@@ -4,56 +4,9 @@
 .ag-theme-alpine {
   @include ag-theme-alpine(
     (
-      header-height: 37px,
-      row-height: 45px,
-           // odd-row-background-color: $grid-odd-row-c
-           // row-hover-color: $grid-row-hover-c
-           // selected-row-background-color: $grid-selected-row-c
-      border-color: #b8d7ff,
       row-border-color: null,
       range-selection-border-color: transparent,
       input-focus-border-color: transparent,
     )
   );
-
-  &.row-height-35 .ag-cell {
-    line-height: 35px;
-  }
-
-  .ag-header-cell,
-  .ag-cell {
-    padding-right: 5px;
-    padding-left: 5px;
-    border-top: none !important;
-  }
-
-  .ag-header-row.ag-header-row-floating-filter {
-    font-size: 13px;
-
-    .ag-input-field-input.ag-text-field-input {
-      padding-bottom: 0;
-    }
-  }
-
-  .ag-row-selected > .ag-cell {
-    color: #fff !important;
-  }
-
-  .ag-cell-inline-editing {
-    padding: 0;
-    height: 100%;
-    overflow: visible;
-
-    border: none !important;
-    border-radius: 0;
-    box-shadow: none;
-
-    .ag-input-field-input.ag-text-field-input {
-      padding-top: 17px;
-    }
-  }
-
-  .ag-cell-focus .cell-border {
-    border-color: #3f51b5;
-  }
 }

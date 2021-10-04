@@ -21,8 +21,16 @@
       </tui-select>
     </div>
 
+    <div class="tui-form__row" *ngIf="isScopus">
+      <tui-input formControlName="articleNumber" [tuiTextfieldCleaner]="true"
+        >Номер статті</tui-input
+      >
+    </div>
+
     <div class="tui-form__row">
-      <tui-input formControlName="title">Назва</tui-input>
+      <tui-input formControlName="title" [tuiTextfieldCleaner]="true"
+        >Назва</tui-input
+      >
     </div>
 
     <div class="tui-form__row">

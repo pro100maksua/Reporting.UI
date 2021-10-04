@@ -1,4 +1,4 @@
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -14,7 +14,6 @@ import { of } from "rxjs";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
-import { ErrorInterceptor } from "./core/interceptors/error.interceptor";
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +30,6 @@ import { ErrorInterceptor } from "./core/interceptors/error.interceptor";
   providers: [
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
     { provide: TUI_LANGUAGE, useValue: of(TUI_UKRAINIAN_LANGUAGE) },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

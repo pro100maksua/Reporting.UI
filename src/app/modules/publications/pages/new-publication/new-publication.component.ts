@@ -5,12 +5,16 @@ import {
   Inject,
   OnInit,
 } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiContextWithImplicit, tuiPure } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
+import { debounceTime } from "rxjs/operators";
+import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
+import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
+import { Author } from "../../models/author";
 import { PUBLICATION_TYPES } from "../../models/constants";
 import { Publication } from "../../models/publication";
 import { PublicationsService } from "../../services/publications.service";
@@ -26,88 +30,66 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
   public isScopus = false;
 
-  publicationTypes = [
-    {
-      id: 1,
-      name: "Монографія",
-      value: 1,
-    },
-    {
-      id: 2,
-      name: "Підручник",
-      value: 2,
-    },
-    {
-      id: 3,
-      name: "Навчальний посібник, який рекомендовано Вченою Радою ТНЕУ",
-      value: 3,
-    },
-    {
-      id: 4,
-      name: "Брошура",
-      value: 4,
-    },
-    {
-      id: 5,
-      name: "Наукова публікація у фаховому виданні категорії В",
-      value: 5,
-    },
-    {
-      id: 6,
-      name: "Наукова публікація у нефаховому науковому журналі або збірнику (категорія В)",
-      value: 6,
-    },
-    {
-      id: 7,
-      name: "Тези доповідей на конференціях",
-      value: 7,
-    },
-    {
-      id: 8,
-      name: "Наукові публікації в міжнародній наукометричній базі даних Scopus",
-      value: 8,
-    },
-    {
-      id: 9,
-      name: "Наукові публікації в міжнародній наукометричній базі даних Web of Science",
-      value: 9,
-    },
-  ];
+  public publicationTypes: ComboboxItem[] = [];
 
-  form = new FormGroup({
-    typeId: new FormControl(null, Validators.required),
-    title: new FormControl(null, Validators.required),
-    authors: new FormControl(null, Validators.required),
-    publicationTitle: new FormControl(null, Validators.required),
-    publicationYear: new FormControl(this.currentYear, [
-      Validators.required,
-      Validators.max(this.currentYear),
-    ]),
-    pagesCount: new FormControl(null, Validators.required),
-    printedPagesCount: new FormControl(null, Validators.required),
-  });
+  public form: FormGroup;
 
   constructor(
+    fb: FormBuilder,
     private publicationsService: PublicationsService,
+    private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private dialogContext: TuiDialogContext<DialogResult>
+    private dialogContext: TuiDialogContext<DialogResult, any>
   ) {
     super();
+
+    this.form = fb.group({
+      typeId: [null, Validators.required],
+      articleNumber: [null],
+      title: [null, Validators.required],
+      authors: [null, Validators.required],
+      publicationTitle: [null, Validators.required],
+      publicationYear: [
+        this.currentYear,
+        [Validators.required, Validators.max(this.currentYear)],
+      ],
+      pagesCount: [null, Validators.required],
+      printedPagesCount: [null, Validators.required],
+      doi: [null],
+      publisher: [null],
+      isbn: [null],
+      abstract: [null],
+      pdfUrl: [null],
+      htmlUrl: [null],
+      conferenceLocation: [null],
+      citingPaperCount: [null],
+      citingPatentCount: [null],
+    });
   }
 
   @tuiPure
   stringify(items: any[]) {
+    if (!items || items.length === 0) {
+      return () => "";
+    }
+
     const map = new Map(items.map((i) => [i.id, i.name]));
 
     return ({ $implicit }: TuiContextWithImplicit<number>) =>
       map.get($implicit) || "";
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.validateFormFields(this.form);
 
     this.subscribeToChanges();
+
+    if (this.dialogContext.data.edit) {
+      this.setData();
+    }
+
+    this.getPublicationTypes();
   }
 
   public validateFormFields(form: FormGroup) {
@@ -121,11 +103,56 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
   }
 
   public async save() {
-    const data: Publication = { ...this.form.getRawValue() };
+    const formData = this.form.getRawValue();
 
-    await this.publicationsService.createPublication(data);
+    const data: Publication = {
+      ...formData,
+    };
 
-    this.dialogContext.completeWith({ success: true });
+    try {
+      const publication = await this.publicationsService.createPublication(
+        data
+      );
+
+      this.dialogContext.completeWith({ success: true, data: publication });
+    } catch (err: any) {
+      this.errorService.showRequestError(err);
+    }
+  }
+
+  private async getPublicationTypes() {
+    try {
+      this.publicationTypes =
+        await this.publicationsService.getPublicationTypes();
+    } catch (err: any) {
+      this.errorService.showRequestError(err);
+    }
+  }
+
+  private async getPublicationFromScopus(query: any) {
+    try {
+      const publication =
+        await this.publicationsService.getPublicationFromScopus(query);
+
+      return publication;
+    } catch (err: any) {
+      this.errorService.showRequestError(err);
+    }
+
+    return null;
+  }
+
+  private setData() {
+    this.form.patchValue(
+      {
+        ...this.dialogContext.data,
+        authors: this.dialogContext.data.authors.map((a: Author) => a.fullName),
+      },
+      { emitEvent: false }
+    );
+
+    this.isScopus =
+      this.dialogContext.data.typeValue === PUBLICATION_TYPES.scopus;
   }
 
   private subscribeToChanges() {
@@ -133,8 +160,14 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       .pipe(this.takeUntilDestroy())
       .subscribe(async (typeId) => this.onTypeChange(typeId));
 
+    this.form.controls.articleNumber.valueChanges
+      .pipe(debounceTime(300), this.takeUntilDestroy())
+      .subscribe(async (articleNumber) =>
+        this.onArticleNumberChange(articleNumber)
+      );
+
     this.form.controls.title.valueChanges
-      .pipe(this.takeUntilDestroy())
+      .pipe(debounceTime(300), this.takeUntilDestroy())
       .subscribe(async (title) => this.onTitleChange(title));
   }
 
@@ -142,39 +175,69 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     const type = this.publicationTypes.find((t) => t.id === typeId);
 
     this.isScopus = type?.value === PUBLICATION_TYPES.scopus;
+
+    if (this.isScopus) {
+      this.clearForm({
+        typeId: this.form.controls.typeId.value,
+      });
+    }
+  }
+
+  private async onArticleNumberChange(articleNumber: string) {
+    if (!this.isScopus || !articleNumber) {
+      return;
+    }
+
+    const publication = await this.getPublicationFromScopus({ articleNumber });
+
+    if (publication) {
+      this.form.patchValue(
+        {
+          ...publication,
+          typeId: this.form.controls.typeId.value,
+          authors: publication.authors.map((a) => a.fullName),
+        },
+        { emitEvent: false }
+      );
+    } else {
+      this.clearForm({
+        typeId: this.form.controls.typeId.value,
+        articleNumber: this.form.controls.articleNumber.value,
+        title: this.form.controls.title.value,
+      });
+    }
+
+    this.cdr.markForCheck();
   }
 
   private async onTitleChange(title: string) {
-    const typeId = this.form.controls.typeId.value;
-
-    const type = this.publicationTypes.find((t) => t.id === typeId);
-
-    if (type?.value === PUBLICATION_TYPES.scopus) {
-      const publication =
-        await this.publicationsService.getPublicationFromScopus(title);
-
-      if (publication) {
-        this.form.patchValue(
-          {
-            ...publication,
-            authors: publication.authors.map((a) => a.fullName),
-          },
-          { emitEvent: false }
-        );
-      } else {
-        this.form.patchValue(
-          {
-            publicationTitle: null,
-            publicationYear: this.currentYear,
-            pagesCount: null,
-            printedPagesCount: null,
-            authors: null,
-          },
-          { emitEvent: false }
-        );
-      }
-
-      this.cdr.markForCheck();
+    if (!this.isScopus || !title) {
+      return;
     }
+
+    const publication = await this.getPublicationFromScopus({ title });
+
+    if (publication) {
+      this.form.patchValue(
+        {
+          ...publication,
+          typeId: this.form.controls.typeId.value,
+          authors: publication.authors.map((a) => a.fullName),
+        },
+        { emitEvent: false }
+      );
+    } else {
+      this.clearForm({
+        typeId: this.form.controls.typeId.value,
+        articleNumber: this.form.controls.articleNumber.value,
+        title: this.form.controls.title.value,
+      });
+    }
+
+    this.cdr.markForCheck();
+  }
+
+  private clearForm(data?: any) {
+    this.form.reset(data, { emitEvent: false });
   }
 }
