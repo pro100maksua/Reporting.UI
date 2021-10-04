@@ -16,9 +16,21 @@ export class PublicationsService extends BaseService {
       .toPromise();
   }
 
+  public getPublications() {
+    return this.httpClient
+      .get<Publication[]>(`${this.baseUrl}/Publications/Publications`)
+      .toPromise();
+  }
+
   public createPublication(data: Publication) {
     return this.httpClient
       .post<Publication>(`${this.baseUrl}/Publications/Publications`, data)
+      .toPromise();
+  }
+
+  public deletePublication(id: number) {
+    return this.httpClient
+      .delete<Publication>(`${this.baseUrl}/Publications/Publications/${id}`)
       .toPromise();
   }
 

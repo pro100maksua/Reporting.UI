@@ -1,6 +1,7 @@
 import { Author } from "./author";
 
 export interface Publication {
+  id: number;
   title: string;
   publicationTitle: string;
   publicationYear: number;

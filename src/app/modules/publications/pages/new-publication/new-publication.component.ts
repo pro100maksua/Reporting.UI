@@ -9,11 +9,12 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiContextWithImplicit, tuiPure } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
+import { Author } from "../../models/author";
 import { PUBLICATION_TYPES } from "../../models/constants";
 import { Publication } from "../../models/publication";
 import { PublicationsService } from "../../services/publications.service";
@@ -39,7 +40,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private dialogContext: TuiDialogContext<DialogResult>
+    private dialogContext: TuiDialogContext<DialogResult, any>
   ) {
     super();
 
@@ -84,6 +85,10 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
     this.subscribeToChanges();
 
+    if (this.dialogContext.data.edit) {
+      this.setData();
+    }
+
     this.getPublicationTypes();
   }
 
@@ -102,13 +107,14 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
     const data: Publication = {
       ...formData,
-      authors: (formData.authors as string).split(","),
     };
 
     try {
-      await this.publicationsService.createPublication(data);
+      const publication = await this.publicationsService.createPublication(
+        data
+      );
 
-      this.dialogContext.completeWith({ success: true });
+      this.dialogContext.completeWith({ success: true, data: publication });
     } catch (err: any) {
       this.errorService.showRequestError(err);
     }
@@ -134,6 +140,19 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     }
 
     return null;
+  }
+
+  private setData() {
+    this.form.patchValue(
+      {
+        ...this.dialogContext.data,
+        authors: this.dialogContext.data.authors.map((a: Author) => a.fullName),
+      },
+      { emitEvent: false }
+    );
+
+    this.isScopus =
+      this.dialogContext.data.typeValue === PUBLICATION_TYPES.scopus;
   }
 
   private subscribeToChanges() {
@@ -175,6 +194,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       this.form.patchValue(
         {
           ...publication,
+          typeId: this.form.controls.typeId.value,
           authors: publication.authors.map((a) => a.fullName),
         },
         { emitEvent: false }
@@ -201,6 +221,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       this.form.patchValue(
         {
           ...publication,
+          typeId: this.form.controls.typeId.value,
           authors: publication.authors.map((a) => a.fullName),
         },
         { emitEvent: false }
