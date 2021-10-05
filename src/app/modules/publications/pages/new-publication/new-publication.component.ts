@@ -110,9 +110,16 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     };
 
     try {
-      const publication = await this.publicationsService.createPublication(
-        data
-      );
+      let publication: Publication;
+
+      if (this.dialogContext.data.edit) {
+        publication = await this.publicationsService.updatePublication(
+          this.dialogContext.data.id,
+          data
+        );
+      } else {
+        publication = await this.publicationsService.createPublication(data);
+      }
 
       this.dialogContext.completeWith({ success: true, data: publication });
     } catch (err: any) {
@@ -124,6 +131,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     try {
       this.publicationTypes =
         await this.publicationsService.getPublicationTypes();
+
+      this.cdr.markForCheck();
     } catch (err: any) {
       this.errorService.showRequestError(err);
     }
