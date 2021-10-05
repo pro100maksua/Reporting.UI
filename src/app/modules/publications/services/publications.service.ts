@@ -28,6 +28,12 @@ export class PublicationsService extends BaseService {
       .toPromise();
   }
 
+  public updatePublication(id: number, data: Publication) {
+    return this.httpClient
+      .put<Publication>(`${this.baseUrl}/Publications/Publications/${id}`, data)
+      .toPromise();
+  }
+
   public deletePublication(id: number) {
     return this.httpClient
       .delete<Publication>(`${this.baseUrl}/Publications/Publications/${id}`)

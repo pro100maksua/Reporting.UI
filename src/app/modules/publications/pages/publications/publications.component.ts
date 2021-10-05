@@ -120,7 +120,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   public async addPublication() {
     const result = await this.openPublicationDialog(null, {
       add: true,
-      title: "Нова Публікація",
+      dialogTitle: "Нова Публікація",
     });
 
     if (result?.success) {
@@ -136,13 +136,17 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
     const result = await this.openPublicationDialog(this.selectedPublication, {
       edit: true,
-      title: "Редагувати Публікацію",
+      dialogTitle: "Редагувати Публікацію",
     });
 
     if (result?.success) {
       this.publications = this.publications.map((p) =>
         p.id === this.selectedPublication.id ? result.data : p
       );
+
+      if (this.selectedPublication) {
+        this.selectedPublication = result.data;
+      }
     }
   }
 
@@ -218,7 +222,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
         new PolymorpheusComponent(NewPublicationComponent, this.injector),
         {
           closeable: false,
-          label: options.title,
+          label: options.dialogTitle,
           size: "l",
           data: { ...data, ...options },
         }
