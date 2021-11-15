@@ -1,0 +1,7 @@
+<tui-tabs [(activeItemIndex)]="tabIndex">
+  <button tuiTab (click)="onTabClick(1)">Публікації</button>
+  <button tuiTab (click)="onTabClick(2)">Конференції</button>
+  <button tuiTab (click)="onTabClick(2)">Студенти</button>
+</tui-tabs>
+
+<app-publications [hidden]="tabIndex !== 0"></app-publications>

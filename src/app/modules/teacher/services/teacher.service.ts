@@ -5,7 +5,7 @@ import { BaseService } from "src/app/core/services/base.service";
 import { Publication } from "../models/publication";
 
 @Injectable()
-export class PublicationsService extends BaseService {
+export class TeacherService extends BaseService {
   constructor(httpClient: HttpClient) {
     super(httpClient);
   }

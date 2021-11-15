@@ -16,7 +16,7 @@ import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
 import { Publication } from "../../models/publication";
-import { PublicationsService } from "../../services/publications.service";
+import { TeacherService } from "../../services/teacher.service";
 import { NewPublicationComponent } from "../new-publication/new-publication.component";
 
 @Component({
@@ -26,6 +26,8 @@ import { NewPublicationComponent } from "../new-publication/new-publication.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicationsComponent extends BaseComponent implements OnInit {
+  public tabIndex = 0;
+
   public searchCtrl = new FormControl();
 
   public publications: Publication[] = [];
@@ -101,7 +103,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   private publicationsTable: GridApi;
 
   constructor(
-    private publicationsService: PublicationsService,
+    private teacherService: TeacherService,
     private errorService: ErrorService,
     private commonDialogService: CommonDialogService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
@@ -160,7 +162,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
     if (result) {
       try {
-        await this.publicationsService.deletePublication(
+        await this.teacherService.deletePublication(
           this.selectedPublication.id
         );
 
@@ -176,7 +178,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
       }
     }
   }
-
+  public onTabClick(i: any) {}
   public async refresh() {
     this.searchCtrl.patchValue(null);
 
@@ -193,7 +195,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
   private async getPublications() {
     try {
-      this.publications = await this.publicationsService.getPublications();
+      this.publications = await this.teacherService.getPublications();
 
       this.cdr.markForCheck();
     } catch (err: any) {
