@@ -13,6 +13,7 @@ import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { ErrorService } from "src/app/core/services/error.service";
+import { TaigaService } from "src/app/core/services/taiga.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
 import { PUBLICATION_TYPES } from "../../models/constants";
@@ -40,7 +41,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private dialogContext: TuiDialogContext<DialogResult, any>
+    private dialogContext: TuiDialogContext<DialogResult, any>,
+    public taigaService: TaigaService
   ) {
     super();
 
@@ -66,18 +68,6 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       citingPaperCount: [null],
       citingPatentCount: [null],
     });
-  }
-
-  @tuiPure
-  stringify(items: any[]) {
-    if (!items || items.length === 0) {
-      return () => "";
-    }
-
-    const map = new Map(items.map((i) => [i.id, i.name]));
-
-    return ({ $implicit }: TuiContextWithImplicit<number>) =>
-      map.get($implicit) || "";
   }
 
   async ngOnInit() {

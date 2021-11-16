@@ -1,0 +1,150 @@
+<div class="flex flex-col" style="width: 600px">
+  <div class="text-4xl font-bold text-center mb-6">Реєстрація</div>
+
+  <form
+    class="
+      flex flex-col
+      gap-y-5
+      bg-white
+      shadow-md
+      p-7
+      rounded
+      border border-gray-100
+    "
+    [formGroup]="form"
+    (ngSubmit)="register()"
+  >
+    <label tuiLabel [label]="emailLabel">
+      <ng-template #emailLabel>
+        <span class="text-sm font-bold">Пошта</span>
+      </ng-template>
+
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [tuiTextfieldAutocomplete]="emailAutocomplete"
+        formControlName="email"
+      >
+      </tui-input>
+    </label>
+
+    <div class="grid grid-cols-2 gap-x-5">
+      <label tuiLabel [label]="passwordLabel">
+        <ng-template #passwordLabel>
+          <span class="text-sm font-bold">Пароль</span>
+        </ng-template>
+
+        <tui-input-password
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          [tuiTextfieldAutocomplete]="passwordAutocomplete"
+          formControlName="password"
+        ></tui-input-password>
+      </label>
+
+      <label tuiLabel [label]="confirmPasswordLabel">
+        <ng-template #confirmPasswordLabel>
+          <span class="text-sm font-bold">Повторіть пароль</span>
+        </ng-template>
+
+        <tui-input-password
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          [tuiTextfieldAutocomplete]="passwordAutocomplete"
+          formControlName="confirmPassword"
+        ></tui-input-password>
+      </label>
+
+      <tui-field-error
+        class="col-start-2"
+        formControlName="confirmPassword"
+        *ngIf="form.controls.confirmPassword.hasError('passwordDoesNotMatch')"
+      ></tui-field-error>
+    </div>
+
+    <div class="flex gap-x-5">
+      <label class="flex-1" tuiLabel [label]="firstNameLabel">
+        <ng-template #firstNameLabel>
+          <span class="text-sm font-bold">Ім'я</span>
+        </ng-template>
+
+        <tui-input
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          formControlName="firstName"
+        >
+        </tui-input>
+      </label>
+
+      <label class="flex-1" tuiLabel [label]="lastNameLabel">
+        <ng-template #lastNameLabel>
+          <span class="text-sm font-bold">Прізвище</span>
+        </ng-template>
+
+        <tui-input
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          formControlName="lastName"
+        >
+        </tui-input>
+      </label>
+    </div>
+
+    <label tuiLabel [label]="departmentLabel">
+      <ng-template #departmentLabel>
+        <span class="text-sm font-bold">Кафедра</span>
+      </ng-template>
+
+      <tui-select
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [valueContent]="taigaService.stringify(departments)"
+        formControlName="departmentId"
+      >
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button
+              *ngFor="let item of departments"
+              tuiOption
+              [value]="item.id"
+            >
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </label>
+
+    <label tuiLabel [label]="roleLabel">
+      <ng-template #roleLabel>
+        <span class="text-sm font-bold">Рівень Доступу</span>
+      </ng-template>
+
+      <div tuiGroup>
+        <tui-radio-block
+          *ngFor="let item of roles"
+          [hideRadio]="true"
+          size="m"
+          formControlName="roleId"
+          [item]="item.id"
+        >
+          {{ item.name }}
+        </tui-radio-block>
+      </div>
+    </label>
+
+    <div class="flex justify-between text-sm font-bold">
+      <a tuiLink (click)="loginClick.emit()">Вхід</a>
+    </div>
+
+    <button
+      type="submit"
+      tuiButton
+      size="m"
+      appearance="primary"
+      [disabled]="!form.valid"
+    >
+      Зареєструватися
+    </button>
+  </form>
+</div>
