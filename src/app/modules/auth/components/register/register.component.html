@@ -26,6 +26,11 @@
         formControlName="email"
       >
       </tui-input>
+
+      <tui-field-error
+        formControlName="email"
+        *ngIf="form.controls.email.hasError('notUnique')"
+      ></tui-field-error>
     </label>
 
     <div class="grid grid-cols-2 gap-x-5">
@@ -132,6 +137,8 @@
         </tui-radio-block>
       </div>
     </label>
+
+    <tui-error *ngIf="error" [error]="error"></tui-error>
 
     <div class="flex justify-between text-sm font-bold">
       <a tuiLink (click)="loginClick.emit()">Вхід</a>

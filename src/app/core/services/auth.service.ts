@@ -1,14 +1,15 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { lastValueFrom, tap } from "rxjs";
+import { lastValueFrom, Observable, tap } from "rxjs";
 import { BaseService } from "src/app/core/services/base.service";
 import { LoginData } from "../models/login-data";
 import { RegisterData } from "../models/register-data";
 
 @Injectable({ providedIn: "root" })
 export class AuthService extends BaseService {
-  constructor(httpClient: HttpClient) {
+  constructor(httpClient: HttpClient, private router: Router) {
     super(httpClient);
   }
 
@@ -28,20 +29,39 @@ export class AuthService extends BaseService {
     );
   }
 
+  public validateEmail(email: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseUrl}/Auth/ValidateEmail`, {
+      value: email,
+    });
+  }
+
   public isLoggedIn(): boolean {
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      return false;
-    }
+    return !new JwtHelperService().isTokenExpired(token);
+  }
 
-    const jwtHelper = new JwtHelperService();
+  public getUserName() {
+    const token = localStorage.getItem("token");
 
-    return !jwtHelper.isTokenExpired(token);
+    return new JwtHelperService().decodeToken(token)?.unique_name;
   }
 
   public logout() {
     localStorage.removeItem("token");
+
+    this.router.navigate(["auth"]);
+  }
+
+  public tokenGetter(): string {
+    if (this.isLoggedIn()) {
+      const token = localStorage.getItem("token");
+
+      return token;
+    }
+
+    this.router.navigate(["/auth"]);
+    return null;
   }
 
   private setToken(token: string) {

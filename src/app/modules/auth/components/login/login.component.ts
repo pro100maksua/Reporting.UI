@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
+  OnInit,
   Output,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -16,7 +18,7 @@ import { BaseComponent } from "src/app/shared/components/base.component";
   styleUrls: ["./login.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent extends BaseComponent {
+export class LoginComponent extends BaseComponent implements OnInit {
   @Output() registerClick = new EventEmitter();
   @Output() forgotPasswordClick = new EventEmitter();
 
@@ -25,11 +27,14 @@ export class LoginComponent extends BaseComponent {
 
   public form: FormGroup;
 
+  public error: string;
+
   constructor(
     fb: FormBuilder,
     private authService: AuthService,
     private errorService: ErrorService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     super();
 
@@ -37,6 +42,10 @@ export class LoginComponent extends BaseComponent {
       email: [null, Validators.required],
       password: [null, Validators.required],
     });
+  }
+
+  ngOnInit() {
+    this.subscribeToChanges();
   }
 
   public async login() {
@@ -51,7 +60,19 @@ export class LoginComponent extends BaseComponent {
 
       this.router.navigateByUrl("/");
     } catch (err: any) {
+      if (err.error?.message) {
+        this.error = err.error?.message;
+        this.cdr.markForCheck();
+        return;
+      }
+
       this.errorService.showRequestError(err);
     }
+  }
+
+  private subscribeToChanges() {
+    this.form.valueChanges
+      .pipe(this.takeUntilDestroy())
+      .subscribe(() => (this.error = null));
   }
 }

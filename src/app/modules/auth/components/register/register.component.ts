@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -15,6 +16,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router } from "@angular/router";
+import { map, Observable } from "rxjs";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { AuthService } from "src/app/core/services/auth.service";
 import { ErrorService } from "src/app/core/services/error.service";
@@ -39,19 +41,26 @@ export class RegisterComponent extends BaseComponent implements OnInit {
 
   public form: FormGroup;
 
+  public error: string;
+
   constructor(
     fb: FormBuilder,
     private authService: AuthService,
     private errorService: ErrorService,
     public taigaService: TaigaService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     super();
 
     this.form = fb.group({
       firstName: [null, Validators.required],
       lastName: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]],
+      email: [
+        null,
+        [Validators.required, Validators.email],
+        this.uniqueValidator((value) => this.authService.validateEmail(value)),
+      ],
       password: [null, Validators.required],
       confirmPassword: [null, [Validators.required, this.checkPasswords]],
       departmentId: [null, Validators.required],
@@ -84,11 +93,21 @@ export class RegisterComponent extends BaseComponent implements OnInit {
 
       this.router.navigateByUrl("/");
     } catch (err: any) {
+      if (err.error?.message) {
+        this.error = err.error?.message;
+        this.cdr.markForCheck();
+        return;
+      }
+
       this.errorService.showRequestError(err);
     }
   }
 
   private subscribeToChanges() {
+    this.form.valueChanges
+      .pipe(this.takeUntilDestroy())
+      .subscribe(() => (this.error = null));
+
     this.form.controls.password.valueChanges.subscribe(() =>
       this.form.controls.confirmPassword.updateValueAndValidity()
     );
@@ -104,4 +123,13 @@ export class RegisterComponent extends BaseComponent implements OnInit {
       ? null
       : { passwordDoesNotMatch: "Паролі не збігаються" };
   };
+
+  private uniqueValidator =
+    (validate: (value: string) => Observable<any>) =>
+    (control: AbstractControl) =>
+      validate(control.value).pipe(
+        map((result) =>
+          result?.message ? { notUnique: result.message } : null
+        )
+      );
 }

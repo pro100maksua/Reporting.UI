@@ -42,6 +42,8 @@
       ></tui-input-password>
     </label>
 
+    <tui-error *ngIf="error" [error]="error"></tui-error>
+
     <div class="flex justify-between text-sm font-bold">
       <a tuiLink (click)="registerClick.emit()">Реєстрація</a>
     </div>

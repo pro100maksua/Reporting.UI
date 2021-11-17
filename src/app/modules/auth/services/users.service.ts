@@ -1,9 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { lastValueFrom, tap } from "rxjs";
+import { lastValueFrom } from "rxjs";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { BaseService } from "src/app/core/services/base.service";
-import { LoginData } from "../../../core/models/login-data";
 import { Department } from "../models/department";
 
 @Injectable()
