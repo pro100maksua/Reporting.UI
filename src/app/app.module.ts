@@ -2,6 +2,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import {
   TuiDialogModule,
   TuiNotificationsModule,
@@ -14,6 +16,12 @@ import { of } from "rxjs";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
+import { AuthService } from "./core/services/auth.service";
+
+const jwtOptionsFactory = (authService: AuthService) => ({
+  tokenGetter: () => authService.tokenGetter(),
+  allowedDomains: ["localhost:5001"],
+});
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +34,14 @@ import { CoreModule } from "./core/core.module";
     BrowserAnimationsModule,
     TuiDialogModule,
     TuiNotificationsModule,
+    FontAwesomeModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [AuthService],
+      },
+    }),
   ],
   providers: [
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
