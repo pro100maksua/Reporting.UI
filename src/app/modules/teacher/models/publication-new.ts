@@ -1,4 +1,4 @@
-export interface Publication {
+export interface NewPublication {
   title: string;
   publicationTitle: string;
   publicationYear: number;

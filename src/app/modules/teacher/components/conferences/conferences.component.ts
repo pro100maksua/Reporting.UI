@@ -16,21 +16,21 @@ import { CommonDialogService } from "src/app/core/services/common-dialog.service
 import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
-import { Publication } from "../../models/publication";
+import { Conference } from "../../models/conference";
 import { TeacherService } from "../../services/teacher.service";
-import { NewPublicationComponent } from "../new-publication/new-publication.component";
+import { NewConferenceComponent } from "../new-conference/new-conference.component";
 
 @Component({
-  selector: "app-publications",
-  templateUrl: "./publications.component.html",
-  styleUrls: ["./publications.component.scss"],
+  selector: "app-conferences",
+  templateUrl: "./conferences.component.html",
+  styleUrls: ["./conferences.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PublicationsComponent extends BaseComponent implements OnInit {
+export class ConferencesComponent extends BaseComponent implements OnInit {
   public searchCtrl = new FormControl();
 
-  public publications: Publication[] = [];
-  public selectedPublication: Publication;
+  public conferences: Conference[] = [];
+  public selectedConference: Conference;
 
   public gridOptions: GridOptions = {
     columnDefs: [
@@ -39,36 +39,16 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
         field: "title",
       },
       {
-        headerName: "Автори",
-        field: "authors",
-        valueGetter: (params) =>
-          params.data.authors.map((a: Author) => a.fullName),
-      },
-      {
-        headerName: "Тип",
-        field: "typeName",
-      },
-      {
-        headerName: "Видавництво",
-        field: "publicationTitle",
-      },
-      {
-        headerName: "Рік Видання",
-        field: "publicationYear",
+        headerName: "Рік Проведення",
+        field: "year",
         flex: 0,
-        width: 120,
+        width: 200,
       },
       {
-        headerName: "К-ть сторінок",
-        field: "pagesCount",
+        headerName: "Місце Проведення",
+        field: "location",
         flex: 0,
-        width: 130,
-      },
-      {
-        headerName: "К-ть др. ар.",
-        field: "printedPagesCount",
-        flex: 0,
-        width: 120,
+        width: 200,
       },
     ],
 
@@ -86,10 +66,10 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     getRowNodeId: (data) => data.id,
     immutableData: true,
 
-    onRowSelected: (event) => this.selectPublication(event),
+    onRowSelected: (event) => this.selectConference(event),
 
     onGridReady: async (event) => {
-      this.publicationsTable = event.api;
+      this.conferencesTable = event.api;
     },
 
     onCellFocused: (event) =>
@@ -99,7 +79,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
         ?.setSelected(true, true),
   };
 
-  private publicationsTable: GridApi;
+  private conferencesTable: GridApi;
 
   constructor(
     private teacherService: TeacherService,
@@ -113,48 +93,46 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPublications();
+    this.getConferences();
 
     this.subscribeToChanges();
   }
 
-  public async addPublication() {
-    const result = await this.openPublicationDialog(null, {
+  public async addConference() {
+    const result = await this.openConferenceDialog(null, {
       add: true,
-      dialogTitle: "Нова Публікація",
+      dialogTitle: "Нова Конференція",
     });
 
     if (result?.success) {
-      this.publications = [...this.publications, result.data];
-
-      this.teacherService.updateConferencesTab();
+      this.conferences = [...this.conferences, result.data];
     }
   }
 
-  public async editPublication() {
-    if (!this.selectedPublication) {
+  public async editConference() {
+    if (!this.selectedConference) {
       this.commonDialogService.openRecordNotSelectedDialog();
       return;
     }
 
-    const result = await this.openPublicationDialog(this.selectedPublication, {
+    const result = await this.openConferenceDialog(this.selectedConference, {
       edit: true,
-      dialogTitle: "Редагувати Публікацію",
+      dialogTitle: "Редагувати Конференцію",
     });
 
     if (result?.success) {
-      this.publications = this.publications.map((p) =>
-        p.id === this.selectedPublication.id ? result.data : p
+      this.conferences = this.conferences.map((p) =>
+        p.id === this.selectedConference.id ? result.data : p
       );
 
-      if (this.selectedPublication) {
-        this.selectedPublication = result.data;
+      if (this.selectedConference) {
+        this.selectedConference = result.data;
       }
     }
   }
 
-  public async deletePublication() {
-    if (!this.selectedPublication) {
+  public async deleteConference() {
+    if (!this.selectedConference) {
       this.commonDialogService.openRecordNotSelectedDialog();
       return;
     }
@@ -164,14 +142,14 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     if (result) {
       try {
         await lastValueFrom(
-          this.teacherService.deletePublication(this.selectedPublication.id)
+          this.teacherService.deleteConference(this.selectedConference.id)
         );
 
-        this.publications = this.publications.filter(
-          (p) => p.id !== this.selectedPublication.id
+        this.conferences = this.conferences.filter(
+          (p) => p.id !== this.selectedConference.id
         );
 
-        this.resetPublicationsSelection();
+        this.resetConferencesSelection();
 
         this.cdr.markForCheck();
       } catch (err: any) {
@@ -179,27 +157,27 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
       }
     }
   }
-  public onTabClick(i: any) {}
+
   public async refresh() {
     this.searchCtrl.patchValue(null);
 
-    this.getPublications();
+    this.getConferences();
   }
 
-  private selectPublication(event: RowSelectedEvent) {
+  private selectConference(event: RowSelectedEvent) {
     if (!event.node.isSelected()) {
       return;
     }
 
-    this.selectedPublication = event.data;
+    this.selectedConference = event.data;
   }
 
-  private async getPublications() {
+  private async getConferences() {
     try {
-      this.publications = await lastValueFrom(
-        this.teacherService.getPublications()
+      this.conferences = await lastValueFrom(
+        this.teacherService.getConferences()
       );
-
+      console.log(this.conferences);
       this.cdr.markForCheck();
     } catch (err: any) {
       this.errorService.showRequestError(err);
@@ -210,21 +188,26 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     this.searchCtrl.valueChanges
       .pipe(this.takeUntilDestroy())
       .subscribe((search) => {
-        this.resetPublicationsSelection();
+        this.resetConferencesSelection();
 
-        this.publicationsTable.setQuickFilter(search);
+        this.conferencesTable.setQuickFilter(search);
       });
+
+    this.teacherService
+      .onConferencesTabUpdate()
+      .pipe(this.takeUntilDestroy())
+      .subscribe(() => this.getConferences());
   }
 
-  private resetPublicationsSelection() {
-    this.publicationsTable?.deselectAll();
-    this.selectedPublication = null;
+  private resetConferencesSelection() {
+    this.conferencesTable?.deselectAll();
+    this.selectedConference = null;
   }
 
-  private openPublicationDialog(data: any, options: any) {
+  private openConferenceDialog(data: any, options: any) {
     return this.dialogService
       .open<DialogResult>(
-        new PolymorpheusComponent(NewPublicationComponent, this.injector),
+        new PolymorpheusComponent(NewConferenceComponent, this.injector),
         {
           closeable: false,
           label: options.dialogTitle,
