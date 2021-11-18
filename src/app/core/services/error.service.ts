@@ -17,7 +17,7 @@ export class ErrorService {
   ) {}
 
   public showRequestError(error: HttpErrorResponse) {
-    if (error.error.message) {
+    if (error.error?.message) {
       this.commonDialogService.openWarningDialog(error.error.message);
     } else {
       this.notificationsService

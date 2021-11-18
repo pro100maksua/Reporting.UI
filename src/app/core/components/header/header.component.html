@@ -1,1 +1,6 @@
-<header class="header"></header>
+<header class="header">
+  <div class="ml-auto flex items-center gap-1">
+    <div class="font-bold">{{ userName }}</div>
+    <fa-icon class="text-base cursor-pointer color" [icon]="faSignOutAlt" (click)="logout()"></fa-icon>
+  </div>
+</header>
