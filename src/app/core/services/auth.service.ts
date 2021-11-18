@@ -54,6 +54,10 @@ export class AuthService extends BaseService {
   }
 
   public tokenGetter(): string {
+    if (this.router.url.startsWith("/auth")) {
+      return null;
+    }
+
     if (this.isLoggedIn()) {
       const token = localStorage.getItem("token");
 
