@@ -6,14 +6,12 @@ import {
   OnInit,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { TuiContextWithImplicit, tuiPure } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
-import { ErrorService } from "src/app/core/services/error.service";
 import { TaigaService } from "src/app/core/services/taiga.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
@@ -39,7 +37,6 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
   constructor(
     fb: FormBuilder,
     private teacherService: TeacherService,
-    private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
     private dialogContext: TuiDialogContext<DialogResult, any>,
@@ -120,7 +117,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
       this.dialogContext.completeWith({ success: true, data: publication });
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.teacherService.showRequestError(err);
     }
   }
 
@@ -132,7 +129,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
       this.cdr.markForCheck();
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.teacherService.showRequestError(err);
     }
   }
 
@@ -144,7 +141,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
       return publication;
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.teacherService.showRequestError(err);
     }
 
     return null;

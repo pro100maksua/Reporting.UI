@@ -1,14 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { TuiNotificationsService } from "@taiga-ui/core";
 import { lastValueFrom } from "rxjs";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { BaseService } from "src/app/core/services/base.service";
+import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Department } from "../models/department";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class UsersService extends BaseService {
-  constructor(httpClient: HttpClient) {
-    super(httpClient);
+  constructor(
+    httpClient: HttpClient,
+    notificationsService: TuiNotificationsService,
+    commonDialogService: CommonDialogService
+  ) {
+    super(httpClient, notificationsService, commonDialogService);
   }
 
   public getRoles() {

@@ -10,7 +10,6 @@ import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
-import { ErrorService } from "src/app/core/services/error.service";
 import { TaigaService } from "src/app/core/services/taiga.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Conference } from "../../models/conference";
@@ -28,7 +27,6 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
   constructor(
     fb: FormBuilder,
     private teacherService: TeacherService,
-    private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
     private dialogContext: TuiDialogContext<DialogResult, any>,
@@ -85,7 +83,7 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
 
       this.dialogContext.completeWith({ success: true, data: conference });
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.teacherService.showRequestError(err);
     }
   }
 

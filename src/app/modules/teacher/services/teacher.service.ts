@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { TuiNotificationsService } from "@taiga-ui/core";
 import { Observable, Subject } from "rxjs";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { BaseService } from "src/app/core/services/base.service";
+import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Conference } from "../models/conference";
 import { Publication } from "../models/publication";
 
@@ -10,8 +12,12 @@ import { Publication } from "../models/publication";
 export class TeacherService extends BaseService {
   private conferencesTabUpdate = new Subject<void>();
 
-  constructor(httpClient: HttpClient) {
-    super(httpClient);
+  constructor(
+    httpClient: HttpClient,
+    notificationsService: TuiNotificationsService,
+    commonDialogService: CommonDialogService
+  ) {
+    super(httpClient, notificationsService, commonDialogService);
   }
 
   public onConferencesTabUpdate = () =>

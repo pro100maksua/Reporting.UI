@@ -13,7 +13,6 @@ import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
-import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
 import { Publication } from "../../models/publication";
@@ -103,7 +102,6 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
   constructor(
     private teacherService: TeacherService,
-    private errorService: ErrorService,
     private commonDialogService: CommonDialogService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
     @Inject(Injector) private injector: Injector,
@@ -175,7 +173,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
         this.cdr.markForCheck();
       } catch (err: any) {
-        this.errorService.showRequestError(err);
+        this.teacherService.showRequestError(err);
       }
     }
   }
@@ -202,7 +200,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
       this.cdr.markForCheck();
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.teacherService.showRequestError(err);
     }
   }
 
