@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiContextWithImplicit, tuiPure } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
+import { lastValueFrom } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
@@ -18,7 +19,7 @@ import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
 import { PUBLICATION_TYPES } from "../../models/constants";
 import { Publication } from "../../models/publication";
-import { PublicationsService } from "../../services/publications.service";
+import { TeacherService } from "../../services/teacher.service";
 
 @Component({
   selector: "app-new-publication",
@@ -37,7 +38,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
   constructor(
     fb: FormBuilder,
-    private publicationsService: PublicationsService,
+    private teacherService: TeacherService,
     private errorService: ErrorService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
@@ -67,6 +68,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       conferenceLocation: [null],
       citingPaperCount: [null],
       citingPatentCount: [null],
+      contentType: [null],
+      publicationNumber: [null],
     });
   }
 
@@ -103,12 +106,16 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       let publication: Publication;
 
       if (this.dialogContext.data.edit) {
-        publication = await this.publicationsService.updatePublication(
-          this.dialogContext.data.id,
-          data
+        publication = await lastValueFrom(
+          this.teacherService.updatePublication(
+            this.dialogContext.data.id,
+            data
+          )
         );
       } else {
-        publication = await this.publicationsService.createPublication(data);
+        publication = await lastValueFrom(
+          this.teacherService.createPublication(data)
+        );
       }
 
       this.dialogContext.completeWith({ success: true, data: publication });
@@ -119,8 +126,9 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
   private async getPublicationTypes() {
     try {
-      this.publicationTypes =
-        await this.publicationsService.getPublicationTypes();
+      this.publicationTypes = await lastValueFrom(
+        this.teacherService.getPublicationTypes()
+      );
 
       this.cdr.markForCheck();
     } catch (err: any) {
@@ -130,8 +138,9 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
 
   private async getPublicationFromScopus(query: any) {
     try {
-      const publication =
-        await this.publicationsService.getPublicationFromScopus(query);
+      const publication = await lastValueFrom(
+        this.teacherService.getPublicationFromScopus(query)
+      );
 
       return publication;
     } catch (err: any) {

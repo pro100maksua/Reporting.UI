@@ -3,6 +3,8 @@ import { Author } from "./author";
 export interface Publication {
   id: number;
   title: string;
+  contentType: string;
+  publicationNumber?: string;
   publicationTitle: string;
   publicationYear: number;
   startPage: string;

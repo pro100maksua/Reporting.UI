@@ -10,13 +10,14 @@ import { FormControl } from "@angular/forms";
 import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
+import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Author } from "../../models/author";
 import { Publication } from "../../models/publication";
-import { PublicationsService } from "../../services/publications.service";
+import { TeacherService } from "../../services/teacher.service";
 import { NewPublicationComponent } from "../new-publication/new-publication.component";
 
 @Component({
@@ -101,7 +102,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   private publicationsTable: GridApi;
 
   constructor(
-    private publicationsService: PublicationsService,
+    private teacherService: TeacherService,
     private errorService: ErrorService,
     private commonDialogService: CommonDialogService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
@@ -125,6 +126,8 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
     if (result?.success) {
       this.publications = [...this.publications, result.data];
+
+      this.teacherService.updateConferencesTab();
     }
   }
 
@@ -160,8 +163,8 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
     if (result) {
       try {
-        await this.publicationsService.deletePublication(
-          this.selectedPublication.id
+        await lastValueFrom(
+          this.teacherService.deletePublication(this.selectedPublication.id)
         );
 
         this.publications = this.publications.filter(
@@ -176,7 +179,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
       }
     }
   }
-
+  public onTabClick(i: any) {}
   public async refresh() {
     this.searchCtrl.patchValue(null);
 
@@ -193,7 +196,9 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
   private async getPublications() {
     try {
-      this.publications = await this.publicationsService.getPublications();
+      this.publications = await lastValueFrom(
+        this.teacherService.getPublications()
+      );
 
       this.cdr.markForCheck();
     } catch (err: any) {

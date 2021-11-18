@@ -9,14 +9,14 @@ const routes: Routes = [
     children: [
       {
         path: "",
-        redirectTo: "publications",
+        redirectTo: "teacher",
         pathMatch: "full",
       },
       {
-        path: "publications",
+        path: "teacher",
         loadChildren: () =>
-          import("../app/modules/publications/publications.module").then(
-            (m) => m.PublicationsModule
+          import("../app/modules/teacher/teacher.module").then(
+            (m) => m.TeacherModule
           ),
       },
     ],
