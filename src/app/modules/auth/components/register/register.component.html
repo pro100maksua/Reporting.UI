@@ -138,6 +138,19 @@
       </div>
     </label>
 
+    <label tuiLabel [label]="ieeeXploreAuthorNameLabel">
+      <ng-template #ieeeXploreAuthorNameLabel>
+        <span class="text-sm font-bold">Ім'я автора в IEEE Xplore</span>
+      </ng-template>
+
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        formControlName="ieeeXploreAuthorName"
+      >
+      </tui-input>
+    </label>
+
     <tui-error *ngIf="error" [error]="error"></tui-error>
 
     <div class="flex justify-between text-sm font-bold">

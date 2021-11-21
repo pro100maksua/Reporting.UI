@@ -7,6 +7,7 @@ import { BaseService } from "src/app/core/services/base.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Conference } from "../models/conference";
 import { Publication } from "../models/publication";
+import { NewPublication } from "../models/publication-new";
 
 @Injectable()
 export class TeacherService extends BaseService {
@@ -33,20 +34,20 @@ export class TeacherService extends BaseService {
     );
   }
 
-  public getPublications() {
+  public getUserPublications() {
     return this.httpClient.get<Publication[]>(
-      `${this.baseUrl}/Publications/Publications`
+      `${this.baseUrl}/Publications/UserPublications`
     );
   }
 
-  public createPublication(data: Publication) {
+  public createPublication(data: NewPublication) {
     return this.httpClient.post<Publication>(
       `${this.baseUrl}/Publications/Publications`,
       data
     );
   }
 
-  public updatePublication(id: number, data: Publication) {
+  public updatePublication(id: number, data: NewPublication) {
     return this.httpClient.put<Publication>(
       `${this.baseUrl}/Publications/Publications/${id}`,
       data
@@ -73,6 +74,13 @@ export class TeacherService extends BaseService {
       {
         params,
       }
+    );
+  }
+
+  public loadScientificJournalsCategoryB() {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/Publications/LoadScientificJournalsCategoryB`,
+      {}
     );
   }
 

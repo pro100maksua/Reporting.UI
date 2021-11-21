@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from "@angular/core";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { filter, lastValueFrom } from "rxjs";
-import { User } from "./core/models/user";
 import { AuthService } from "./core/services/auth.service";
 
 @Component({
@@ -13,9 +17,11 @@ import { AuthService } from "./core/services/auth.service";
 export class AppComponent implements OnInit {
   public isAuth = false;
 
-  public user: User;
-
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -27,7 +33,7 @@ export class AppComponent implements OnInit {
 
   private async getLoggedInUser() {
     try {
-      this.user = await lastValueFrom(this.authService.getLoggedInUser());
+      await lastValueFrom(this.authService.getLoggedInUser());
     } catch (err: any) {
       this.authService.showRequestError(err);
     }

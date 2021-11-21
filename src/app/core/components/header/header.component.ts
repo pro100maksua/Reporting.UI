@@ -4,13 +4,11 @@ import {
   Component,
   Inject,
   Injector,
-  Input,
   OnInit,
 } from "@angular/core";
 import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
-import { lastValueFrom } from "rxjs";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { DialogResult } from "../../models/dialog-result";
 import { User } from "../../models/user";
@@ -24,7 +22,7 @@ import { UpdateUserComponent } from "../update-user/update-user.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent extends BaseComponent implements OnInit {
-  @Input() user: User;
+  public user: User;
 
   public open = false;
 
@@ -36,6 +34,7 @@ export class HeaderComponent extends BaseComponent implements OnInit {
     },
     { title: "Вихід", icon: faSignOutAlt, action: () => this.logout() },
   ];
+
   constructor(
     private authService: AuthService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
@@ -45,7 +44,9 @@ export class HeaderComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscribeToChanges();
+  }
 
   private updateUserInfo() {
     this.dialogService
@@ -62,5 +63,12 @@ export class HeaderComponent extends BaseComponent implements OnInit {
 
   private logout() {
     this.authService.logout();
+  }
+
+  private subscribeToChanges() {
+    this.authService.user$.pipe(this.takeUntilDestroy()).subscribe((u) => {
+      this.user = u;
+      this.cdr.markForCheck();
+    });
   }
 }

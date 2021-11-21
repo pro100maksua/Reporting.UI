@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { TuiNotificationsService } from "@taiga-ui/core";
-import { Observable, Subject, tap } from "rxjs";
+import { BehaviorSubject, Observable, Subject, tap } from "rxjs";
 import { BaseService } from "src/app/core/services/base.service";
 import { LoginData } from "../models/login-data";
 import { RegisterData } from "../models/register-data";
@@ -12,6 +12,8 @@ import { CommonDialogService } from "./common-dialog.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthService extends BaseService {
+  public user$ = new BehaviorSubject<User>(null);
+
   private loggedInUserUpdated = new Subject<void>();
 
   constructor(
@@ -52,7 +54,9 @@ export class AuthService extends BaseService {
   }
 
   public getLoggedInUser() {
-    return this.httpClient.get<User>(`${this.baseUrl}/Auth/LoggedInUser`);
+    return this.httpClient
+      .get<User>(`${this.baseUrl}/Auth/LoggedInUser`)
+      .pipe(tap((u) => this.user$.next(u)));
   }
 
   public validateEmail(email: string, id?: number): Observable<any> {

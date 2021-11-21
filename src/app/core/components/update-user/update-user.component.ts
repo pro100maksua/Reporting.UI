@@ -102,6 +102,7 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
       password: formValue.password,
       departmentId: formValue.departmentId,
       roleId: formValue.roleId,
+      ieeeXploreAuthorName: formValue.ieeeXploreAuthorName?.trim(),
     };
 
     try {

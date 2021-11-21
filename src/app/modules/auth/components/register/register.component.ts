@@ -63,6 +63,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
       confirmPassword: [null, [Validators.required, this.checkPasswords]],
       departmentId: [null, Validators.required],
       roleId: [null, Validators.required],
+      ieeeXploreAuthorName: [null],
     });
   }
 
@@ -84,6 +85,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
       password: formValue.password,
       departmentId: formValue.departmentId,
       roleId: formValue.roleId,
+      ieeeXploreAuthorName: formValue.ieeeXploreAuthorName?.trim(),
     };
 
     try {

@@ -12,11 +12,13 @@ import { lastValueFrom } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
+import { AuthService } from "src/app/core/services/auth.service";
+import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { TaigaService } from "src/app/core/services/taiga.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
-import { Author } from "../../models/author";
 import { PUBLICATION_TYPES } from "../../models/constants";
 import { Publication } from "../../models/publication";
+import { NewPublication } from "../../models/publication-new";
 import { TeacherService } from "../../services/teacher.service";
 
 @Component({
@@ -37,6 +39,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
   constructor(
     fb: FormBuilder,
     private teacherService: TeacherService,
+    private authService: AuthService,
+    private commonDialogService: CommonDialogService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
     private dialogContext: TuiDialogContext<DialogResult, any>,
@@ -48,7 +52,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       typeId: [null, Validators.required],
       articleNumber: [null],
       title: [null, Validators.required],
-      authors: [null, Validators.required],
+      scopusAuthors: [null],
       publicationTitle: [null, Validators.required],
       publicationYear: [
         this.currentYear,
@@ -93,11 +97,25 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
   }
 
   public async save() {
-    const formData = this.form.getRawValue();
+    const data: NewPublication = this.form.getRawValue();
 
-    const data: Publication = {
-      ...formData,
-    };
+    const user = this.authService.user$.value;
+
+    if (this.isScopus) {
+      if (!user.ieeeXploreAuthorName) {
+        this.commonDialogService.openWarningDialog(
+          "Потрібно додати ім'я автора в IEEE Xplore"
+        );
+        return;
+      }
+
+      if (!data.scopusAuthors.includes(user.ieeeXploreAuthorName)) {
+        this.commonDialogService.openWarningDialog(
+          `${user.ieeeXploreAuthorName} не є автором публікації.`
+        );
+        return;
+      }
+    }
 
     try {
       let publication: Publication;
@@ -148,13 +166,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
   }
 
   private setData() {
-    this.form.patchValue(
-      {
-        ...this.dialogContext.data,
-        authors: this.dialogContext.data.authors.map((a: Author) => a.fullName),
-      },
-      { emitEvent: false }
-    );
+    this.form.patchValue(this.dialogContext.data, { emitEvent: false });
 
     this.isScopus =
       this.dialogContext.data.typeValue === PUBLICATION_TYPES.scopus;
@@ -200,7 +212,6 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
         {
           ...publication,
           typeId: this.form.controls.typeId.value,
-          authors: publication.authors.map((a) => a.fullName),
         },
         { emitEvent: false }
       );
@@ -227,7 +238,6 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
         {
           ...publication,
           typeId: this.form.controls.typeId.value,
-          authors: publication.authors.map((a) => a.fullName),
         },
         { emitEvent: false }
       );

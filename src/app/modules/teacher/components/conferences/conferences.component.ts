@@ -14,7 +14,6 @@ import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
-import { Author } from "../../models/author";
 import { Conference } from "../../models/conference";
 import { TeacherService } from "../../services/teacher.service";
 import { NewConferenceComponent } from "../new-conference/new-conference.component";

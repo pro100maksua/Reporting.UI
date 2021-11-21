@@ -14,7 +14,6 @@ import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
-import { Author } from "../../models/author";
 import { Publication } from "../../models/publication";
 import { TeacherService } from "../../services/teacher.service";
 import { NewPublicationComponent } from "../new-publication/new-publication.component";
@@ -40,8 +39,6 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
       {
         headerName: "Автори",
         field: "authors",
-        valueGetter: (params) =>
-          params.data.authors.map((a: Author) => a.fullName),
       },
       {
         headerName: "Тип",
@@ -112,6 +109,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.getPublications();
+    this.loadScientificJournalsCategoryB();
 
     this.subscribeToChanges();
   }
@@ -123,7 +121,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     });
 
     if (result?.success) {
-      this.publications = [...this.publications, result.data];
+      this.getPublications();
 
       this.teacherService.updateConferencesTab();
     }
@@ -141,13 +139,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     });
 
     if (result?.success) {
-      this.publications = this.publications.map((p) =>
-        p.id === this.selectedPublication.id ? result.data : p
-      );
-
-      if (this.selectedPublication) {
-        this.selectedPublication = result.data;
-      }
+      this.getPublications();
     }
   }
 
@@ -165,19 +157,13 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
           this.teacherService.deletePublication(this.selectedPublication.id)
         );
 
-        this.publications = this.publications.filter(
-          (p) => p.id !== this.selectedPublication.id
-        );
-
-        this.resetPublicationsSelection();
-
-        this.cdr.markForCheck();
+        this.getPublications();
       } catch (err: any) {
         this.teacherService.showRequestError(err);
       }
     }
   }
-  public onTabClick(i: any) {}
+
   public async refresh() {
     this.searchCtrl.patchValue(null);
 
@@ -195,10 +181,26 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   private async getPublications() {
     try {
       this.publications = await lastValueFrom(
-        this.teacherService.getPublications()
+        this.teacherService.getUserPublications()
       );
 
+      if (this.selectedPublication) {
+        this.selectedPublication = this.publications.find(
+          (p) => p.id === this.selectedPublication.id
+        );
+      }
+
       this.cdr.markForCheck();
+    } catch (err: any) {
+      this.teacherService.showRequestError(err);
+    }
+  }
+
+  private async loadScientificJournalsCategoryB() {
+    try {
+      await lastValueFrom(
+        this.teacherService.loadScientificJournalsCategoryB()
+      );
     } catch (err: any) {
       this.teacherService.showRequestError(err);
     }
@@ -220,8 +222,8 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   }
 
   private openPublicationDialog(data: any, options: any) {
-    return this.dialogService
-      .open<DialogResult>(
+    return lastValueFrom(
+      this.dialogService.open<DialogResult>(
         new PolymorpheusComponent(NewPublicationComponent, this.injector),
         {
           closeable: false,
@@ -230,6 +232,6 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
           data: { ...data, ...options },
         }
       )
-      .toPromise();
+    );
   }
 }
