@@ -8,8 +8,8 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { lastValueFrom } from "rxjs";
 import { AuthService } from "src/app/core/services/auth.service";
-import { ErrorService } from "src/app/core/services/error.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 
 @Component({
@@ -32,7 +32,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
   constructor(
     fb: FormBuilder,
     private authService: AuthService,
-    private errorService: ErrorService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
@@ -56,7 +55,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
     const data = this.form.value;
 
     try {
-      await this.authService.login(data);
+      await lastValueFrom(this.authService.login(data));
+
+      this.authService.refreshLoggedInUser();
 
       this.router.navigateByUrl("/");
     } catch (err: any) {
@@ -66,7 +67,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         return;
       }
 
-      this.errorService.showRequestError(err);
+      this.authService.showRequestError(err);
     }
   }
 

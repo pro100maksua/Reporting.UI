@@ -7,4 +7,5 @@ export interface User {
   departmentId: string;
   departmentName: string;
   roles: number[];
+  ieeeXploreAuthorName?: string;
 }

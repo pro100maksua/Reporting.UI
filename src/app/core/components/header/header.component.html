@@ -1,6 +1,26 @@
 <header class="header">
   <div class="ml-auto flex items-center gap-1">
-    <div class="font-bold">{{ userName }}</div>
-    <fa-icon class="text-base cursor-pointer color" [icon]="faSignOutAlt" (click)="logout()"></fa-icon>
+    <tui-hosted-dropdown [content]="dropdown" [(open)]="open">
+      <div class="font-bold cursor-pointer">
+        {{ user?.firstName }} {{ user?.lastName }}
+
+        <tui-svg
+          class="arrow"
+          [class.arrow_open]="open"
+          src="tuiIconChevronDown"
+        ></tui-svg>
+      </div>
+    </tui-hosted-dropdown>
+
+    <ng-template #dropdown>
+      <tui-data-list>
+        <tui-opt-group>
+          <button *ngFor="let item of items" tuiOption (click)="item.action()">
+            <fa-icon class="mr-2" [icon]="item.icon"></fa-icon>
+            {{ item.title }}
+          </button>
+        </tui-opt-group>
+      </tui-data-list>
+    </ng-template>
   </div>
 </header>

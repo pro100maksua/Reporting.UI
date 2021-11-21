@@ -1,5 +1,3 @@
-import { Author } from "./author";
-
 export interface Publication {
   id: number;
   title: string;
@@ -21,5 +19,5 @@ export interface Publication {
   conferenceLocation?: string;
   citingPaperCount?: number;
   citingPatentCount?: number;
-  authors: Author[];
+  authors: string;
 }

@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
+  Inject,
   OnInit,
   Output,
 } from "@angular/core";
@@ -15,24 +15,25 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
-import { Router } from "@angular/router";
+import { TuiDialogContext } from "@taiga-ui/core/interfaces";
+import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom, map, Observable, tap } from "rxjs";
-import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { AuthService } from "src/app/core/services/auth.service";
 import { TaigaService } from "src/app/core/services/taiga.service";
+import { FACULTY_VALUES } from "src/app/modules/auth/models/constants";
+import { Department } from "src/app/modules/auth/models/department";
+import { UsersService } from "src/app/modules/auth/services/users.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
-import { Department } from "../../models/department";
+import { ComboboxItem } from "../../models/combobox-item";
+import { DialogResult } from "../../models/dialog-result";
 
 @Component({
-  selector: "app-register",
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"],
+  selector: "app-update-user",
+  templateUrl: "./update-user.component.html",
+  styleUrls: ["./update-user.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent extends BaseComponent implements OnInit {
-  @Input() roles: ComboboxItem[];
-  @Input() departments: Department[];
-
+export class UpdateUserComponent extends BaseComponent implements OnInit {
   @Output() loginClick = new EventEmitter();
 
   public emailAutocomplete: any = "username";
@@ -40,13 +41,18 @@ export class RegisterComponent extends BaseComponent implements OnInit {
 
   public form: FormGroup;
 
+  public roles: ComboboxItem[];
+  public departments: Department[];
+
   public error: string;
 
   constructor(
     fb: FormBuilder,
     private authService: AuthService,
+    private usersService: UsersService,
+    @Inject(POLYMORPHEUS_CONTEXT)
+    private dialogContext: TuiDialogContext<DialogResult, any>,
     public taigaService: TaigaService,
-    private router: Router,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -57,21 +63,32 @@ export class RegisterComponent extends BaseComponent implements OnInit {
       email: [
         null,
         [Validators.required, Validators.email],
-        this.uniqueValidator((value) => this.authService.validateEmail(value)),
+        this.uniqueValidator((value) =>
+          this.authService.validateEmail(value, this.dialogContext.data.id)
+        ),
       ],
-      password: [null, Validators.required],
-      confirmPassword: [null, [Validators.required, this.checkPasswords]],
+      password: [null],
+      confirmPassword: [null, this.checkPasswords],
       departmentId: [null, Validators.required],
       roleId: [null, Validators.required],
       ieeeXploreAuthorName: [null],
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.subscribeToChanges();
+
+    this.setData();
+
+    await Promise.all([this.getDepartments(), this.getRoles()]);
+    this.cdr.markForCheck();
   }
 
-  public async register() {
+  public cancel() {
+    this.dialogContext.completeWith({ success: false });
+  }
+
+  public async save() {
     if (!this.form.valid) {
       return;
     }
@@ -89,11 +106,11 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     };
 
     try {
-      await lastValueFrom(this.authService.register(data));
+      await lastValueFrom(this.authService.updateLoggedInUser(data));
 
       this.authService.refreshLoggedInUser();
 
-      this.router.navigateByUrl("/");
+      this.dialogContext.completeWith({ success: true });
     } catch (err: any) {
       if (err.error?.message) {
         this.error = err.error?.message;
@@ -103,6 +120,28 @@ export class RegisterComponent extends BaseComponent implements OnInit {
 
       this.authService.showRequestError(err);
     }
+  }
+
+  private async getRoles() {
+    try {
+      this.roles = await this.usersService.getRoles();
+    } catch (err: any) {
+      this.usersService.showRequestError(err);
+    }
+  }
+
+  private async getDepartments() {
+    try {
+      this.departments = await this.usersService.getDepartments(
+        FACULTY_VALUES.fcit
+      );
+    } catch (err: any) {
+      this.usersService.showRequestError(err);
+    }
+  }
+
+  private setData() {
+    this.form.patchValue(this.dialogContext.data, { emitEvent: false });
   }
 
   private subscribeToChanges() {
@@ -121,7 +160,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     const pass = control.parent?.get("password").value;
     const confirmPass = control.value;
 
-    return pass === confirmPass
+    return (!pass && !confirmPass) || pass === confirmPass
       ? null
       : { passwordDoesNotMatch: "Паролі не збігаються" };
   };

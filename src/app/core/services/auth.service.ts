@@ -2,35 +2,66 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { lastValueFrom, Observable, tap } from "rxjs";
+import { TuiNotificationsService } from "@taiga-ui/core";
+import { BehaviorSubject, Observable, Subject, tap } from "rxjs";
 import { BaseService } from "src/app/core/services/base.service";
 import { LoginData } from "../models/login-data";
 import { RegisterData } from "../models/register-data";
+import { User } from "../models/user";
+import { CommonDialogService } from "./common-dialog.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthService extends BaseService {
-  constructor(httpClient: HttpClient, private router: Router) {
-    super(httpClient);
+  public user$ = new BehaviorSubject<User>(null);
+
+  private loggedInUserUpdated = new Subject<void>();
+
+  constructor(
+    httpClient: HttpClient,
+    notificationsService: TuiNotificationsService,
+    commonDialogService: CommonDialogService,
+    private router: Router
+  ) {
+    super(httpClient, notificationsService, commonDialogService);
+  }
+
+  public onLoggedInUserUpdated = () =>
+    this.loggedInUserUpdated as Observable<void>;
+
+  public refreshLoggedInUser() {
+    this.loggedInUserUpdated.next();
   }
 
   public login(data: LoginData) {
-    return lastValueFrom(
-      this.httpClient
-        .post<any>(`${this.baseUrl}/Auth/Login`, data)
-        .pipe(tap((r) => this.setToken(r.token)))
-    );
+    return this.httpClient
+      .post<any>(`${this.baseUrl}/Auth/Login`, data)
+      .pipe(tap((r) => this.setToken(r.token)));
   }
 
   public register(data: RegisterData) {
-    return lastValueFrom(
-      this.httpClient
-        .post<any>(`${this.baseUrl}/Auth/Register`, data)
-        .pipe(tap((r) => this.setToken(r.token)))
-    );
+    return this.httpClient
+      .post<any>(`${this.baseUrl}/Auth/Register`, data)
+      .pipe(tap((r) => this.setToken(r.token)));
   }
 
-  public validateEmail(email: string): Observable<any> {
+  public updateLoggedInUser(data: RegisterData) {
+    return this.httpClient
+      .put<any>(`${this.baseUrl}/Auth/LoggedInUser`, data)
+      .pipe(
+        tap((r) => this.setToken(r.token)),
+        tap((r) => console.log(r))
+      );
+  }
+
+  public getLoggedInUser() {
+    return this.httpClient
+      .get<User>(`${this.baseUrl}/Auth/LoggedInUser`)
+      .pipe(tap((u) => this.user$.next(u)));
+  }
+
+  public validateEmail(email: string, id?: number): Observable<any> {
     return this.httpClient.post<any>(`${this.baseUrl}/Auth/ValidateEmail`, {
+      id,
       value: email,
     });
   }
@@ -54,10 +85,6 @@ export class AuthService extends BaseService {
   }
 
   public tokenGetter(): string {
-    if (this.router.url.startsWith("/auth")) {
-      return null;
-    }
-
     if (this.isLoggedIn()) {
       const token = localStorage.getItem("token");
 

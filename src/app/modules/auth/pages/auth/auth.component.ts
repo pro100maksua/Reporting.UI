@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
-import { ErrorService } from "src/app/core/services/error.service";
 import { AuthMode, FACULTY_VALUES } from "../../models/constants";
 import { Department } from "../../models/department";
 import { UsersService } from "../../services/users.service";
@@ -19,10 +18,7 @@ export class AuthComponent implements OnInit {
   public roles: ComboboxItem[] = [];
   public departments: Department[] = [];
 
-  constructor(
-    private usersService: UsersService,
-    private errorService: ErrorService
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.getDepartments();
@@ -45,7 +41,7 @@ export class AuthComponent implements OnInit {
     try {
       this.roles = await this.usersService.getRoles();
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.usersService.showRequestError(err);
     }
   }
 
@@ -55,7 +51,7 @@ export class AuthComponent implements OnInit {
         FACULTY_VALUES.fcit
       );
     } catch (err: any) {
-      this.errorService.showRequestError(err);
+      this.usersService.showRequestError(err);
     }
   }
 }

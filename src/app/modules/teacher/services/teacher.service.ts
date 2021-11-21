@@ -1,17 +1,24 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { TuiNotificationsService } from "@taiga-ui/core";
 import { Observable, Subject } from "rxjs";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { BaseService } from "src/app/core/services/base.service";
+import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Conference } from "../models/conference";
 import { Publication } from "../models/publication";
+import { NewPublication } from "../models/publication-new";
 
 @Injectable()
 export class TeacherService extends BaseService {
   private conferencesTabUpdate = new Subject<void>();
 
-  constructor(httpClient: HttpClient) {
-    super(httpClient);
+  constructor(
+    httpClient: HttpClient,
+    notificationsService: TuiNotificationsService,
+    commonDialogService: CommonDialogService
+  ) {
+    super(httpClient, notificationsService, commonDialogService);
   }
 
   public onConferencesTabUpdate = () =>
@@ -27,20 +34,20 @@ export class TeacherService extends BaseService {
     );
   }
 
-  public getPublications() {
+  public getUserPublications() {
     return this.httpClient.get<Publication[]>(
-      `${this.baseUrl}/Publications/Publications`
+      `${this.baseUrl}/Publications/UserPublications`
     );
   }
 
-  public createPublication(data: Publication) {
+  public createPublication(data: NewPublication) {
     return this.httpClient.post<Publication>(
       `${this.baseUrl}/Publications/Publications`,
       data
     );
   }
 
-  public updatePublication(id: number, data: Publication) {
+  public updatePublication(id: number, data: NewPublication) {
     return this.httpClient.put<Publication>(
       `${this.baseUrl}/Publications/Publications/${id}`,
       data
@@ -67,6 +74,13 @@ export class TeacherService extends BaseService {
       {
         params,
       }
+    );
+  }
+
+  public loadScientificJournalsCategoryB() {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/Publications/LoadScientificJournalsCategoryB`,
+      {}
     );
   }
 
