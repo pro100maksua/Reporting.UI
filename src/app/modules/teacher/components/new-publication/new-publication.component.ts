@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { lastValueFrom } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { ComboboxItem } from "src/app/core/models/combobox-item";
@@ -41,6 +42,7 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     private teacherService: TeacherService,
     private authService: AuthService,
     private commonDialogService: CommonDialogService,
+    private loaderService: NgxUiLoaderService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
     private dialogContext: TuiDialogContext<DialogResult, any>,
@@ -117,6 +119,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
       }
     }
 
+    this.loaderService.start();
+
     try {
       let publication: Publication;
 
@@ -137,6 +141,8 @@ export class NewPublicationComponent extends BaseComponent implements OnInit {
     } catch (err: any) {
       this.teacherService.showRequestError(err);
     }
+
+    this.loaderService.stop();
   }
 
   private async getPublicationTypes() {

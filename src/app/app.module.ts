@@ -12,11 +12,28 @@ import {
 } from "@taiga-ui/core";
 import { TUI_LANGUAGE, TUI_UKRAINIAN_LANGUAGE } from "@taiga-ui/i18n";
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
+import {
+  NgxUiLoaderConfig,
+  NgxUiLoaderModule,
+  PB_DIRECTION,
+  POSITION,
+  SPINNER,
+} from "ngx-ui-loader";
 import { of } from "rxjs";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { AuthService } from "./core/services/auth.service";
+
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+  fgsSize: 40,
+  fgsColor: "#c3c3c3",
+  fgsType: SPINNER.fadingCircle,
+  hasProgressBar: false,
+  blur: 0,
+  delay: 0,
+  fastFadeOut: true,
+};
 
 const jwtOptionsFactory = (authService: AuthService) => ({
   tokenGetter: () => authService.tokenGetter(),
@@ -35,6 +52,7 @@ const jwtOptionsFactory = (authService: AuthService) => ({
     TuiDialogModule,
     TuiNotificationsModule,
     FontAwesomeModule,
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
