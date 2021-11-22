@@ -36,4 +36,11 @@ export class UsersService extends BaseService {
       })
     );
   }
+
+  public updateUserIeeeXploreAuthorName(id: number, name: string) {
+    return this.httpClient.put<any>(
+      `${this.baseUrl}/Users/Users/${id}/IeeeXploreAuthorName`,
+      { value: name }
+    );
+  }
 }

@@ -47,10 +47,7 @@ export class AuthService extends BaseService {
   public updateLoggedInUser(data: RegisterData) {
     return this.httpClient
       .put<any>(`${this.baseUrl}/Auth/LoggedInUser`, data)
-      .pipe(
-        tap((r) => this.setToken(r.token)),
-        tap((r) => console.log(r))
-      );
+      .pipe(tap((r) => this.setToken(r.token)));
   }
 
   public getLoggedInUser() {
@@ -70,6 +67,12 @@ export class AuthService extends BaseService {
     const token = localStorage.getItem("token");
 
     return !new JwtHelperService().isTokenExpired(token);
+  }
+
+  public getUserId() {
+    const token = localStorage.getItem("token");
+
+    return new JwtHelperService().decodeToken(token)?.nameid;
   }
 
   public getUserName() {
