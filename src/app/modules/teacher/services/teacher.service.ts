@@ -84,6 +84,13 @@ export class TeacherService extends BaseService {
     );
   }
 
+  public importScopusPublications() {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/Publications/ImportScopusPublications`,
+      {}
+    );
+  }
+
   public getConferences() {
     return this.httpClient.get<Conference[]>(
       `${this.baseUrl}/Conferences/Conferences`

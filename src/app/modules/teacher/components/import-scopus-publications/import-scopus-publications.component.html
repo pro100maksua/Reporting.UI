@@ -1,0 +1,25 @@
+<form class="flex flex-col gap-y-5" [formGroup]="form" (ngSubmit)="save()">
+  <tui-input formControlName="ieeeXploreAuthorName">
+    Ім'я автора в IEEE Xplore
+  </tui-input>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      class="tui-form__button"
+      type="submit"
+      [disabled]="!form.valid"
+    >
+      Ок
+    </button>
+    <button
+      tuiButton
+      type="button"
+      class="tui-form__button"
+      appearance="flat"
+      (click)="cancel()"
+    >
+      Скасувати
+    </button>
+  </div>
+</form>

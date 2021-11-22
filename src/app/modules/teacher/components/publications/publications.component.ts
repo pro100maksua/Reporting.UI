@@ -12,10 +12,12 @@ import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
+import { AuthService } from "src/app/core/services/auth.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Publication } from "../../models/publication";
 import { TeacherService } from "../../services/teacher.service";
+import { ImportScopusPublicationsComponent } from "../import-scopus-publications/import-scopus-publications.component";
 import { NewPublicationComponent } from "../new-publication/new-publication.component";
 
 @Component({
@@ -98,6 +100,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   private publicationsTable: GridApi;
 
   constructor(
+    private authService: AuthService,
     private teacherService: TeacherService,
     private commonDialogService: CommonDialogService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
@@ -161,6 +164,29 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
       } catch (err: any) {
         this.teacherService.showRequestError(err);
       }
+    }
+  }
+
+  public async importScopusPublications() {
+    const result = await lastValueFrom(
+      this.dialogService.open<DialogResult>(
+        new PolymorpheusComponent(
+          ImportScopusPublicationsComponent,
+          this.injector
+        ),
+        {
+          closeable: false,
+          label: "Імпорт Scopus",
+          size: "m",
+          data: { ...this.authService.user$.value },
+        }
+      )
+    );
+
+    if (result?.success) {
+      this.getPublications();
+
+      this.teacherService.updateConferencesTab();
     }
   }
 

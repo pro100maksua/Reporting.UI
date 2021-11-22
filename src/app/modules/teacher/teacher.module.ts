@@ -8,6 +8,7 @@ import { TeacherService } from "./services/teacher.service";
 import { TeacherRoutingModule } from "./teacher-routing.module";
 import { ConferencesComponent } from './components/conferences/conferences.component';
 import { NewConferenceComponent } from './components/new-conference/new-conference.component';
+import { ImportScopusPublicationsComponent } from './components/import-scopus-publications/import-scopus-publications.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { NewConferenceComponent } from './components/new-conference/new-conferen
     NewPublicationComponent,
     ConferencesComponent,
     NewConferenceComponent,
+    ImportScopusPublicationsComponent,
   ],
   imports: [CommonModule, TeacherRoutingModule, SharedModule],
   providers: [TeacherService],
