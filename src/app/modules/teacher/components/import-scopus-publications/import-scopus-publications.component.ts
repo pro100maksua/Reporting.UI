@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiDialogContext } from "@taiga-ui/core/interfaces";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { AuthService } from "src/app/core/services/auth.service";
@@ -32,6 +33,7 @@ export class ImportScopusPublicationsComponent
     private authService: AuthService,
     private usersService: UsersService,
     private teacherService: TeacherService,
+    private loaderService: NgxUiLoaderService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private dialogContext: TuiDialogContext<DialogResult, any>,
     private cdr: ChangeDetectorRef
@@ -62,6 +64,8 @@ export class ImportScopusPublicationsComponent
 
     const userId = this.authService.getUserId();
 
+    this.loaderService.start();
+
     try {
       await lastValueFrom(
         this.usersService.updateUserIeeeXploreAuthorName(
@@ -78,6 +82,8 @@ export class ImportScopusPublicationsComponent
     } catch (err: any) {
       this.authService.showRequestError(err);
     }
+
+    this.loaderService.stop();
   }
 
   private setData() {
