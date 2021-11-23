@@ -1,0 +1,15 @@
+<tui-tabs class="mb-4" [(activeItemIndex)]="tabIndex">
+  <button tuiTab>Публікації</button>
+  <button tuiTab>Конференції</button>
+  <button tuiTab>Студенти</button>
+</tui-tabs>
+
+<app-publications
+  class="flex-1 flex-col"
+  [ngStyle]="{ display: tabIndex === 0 ? 'flex' : 'none' }"
+></app-publications>
+
+<app-conferences
+  class="flex-1 flex-col"
+  [ngStyle]="{ display: tabIndex === 1 ? 'flex' : 'none' }"
+></app-conferences>

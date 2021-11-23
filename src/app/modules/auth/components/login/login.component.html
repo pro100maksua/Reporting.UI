@@ -1,0 +1,55 @@
+<div class="flex flex-col" style="width: 450px">
+  <div class="text-4xl font-bold text-center mb-6">Вхід</div>
+
+  <form
+    class="
+      flex flex-col
+      gap-y-5
+      bg-white
+      shadow-md
+      p-7
+      rounded
+      border border-gray-100
+    "
+    [formGroup]="form"
+    (ngSubmit)="login()"
+  >
+    <label tuiLabel [label]="emailLabel">
+      <ng-template #emailLabel>
+        <span class="text-sm font-bold">Пошта</span>
+      </ng-template>
+
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [tuiTextfieldAutocomplete]="emailAutocomplete"
+        formControlName="email"
+        autocomplete="new-password"
+      >
+      </tui-input>
+    </label>
+
+    <label tuiLabel [label]="passwordLabel">
+      <ng-template #passwordLabel>
+        <span class="text-sm font-bold">Пароль</span>
+      </ng-template>
+
+      <tui-input-password
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [tuiTextfieldAutocomplete]="passwordAutocomplete"
+        formControlName="password"
+      ></tui-input-password>
+    </label>
+
+    <tui-error *ngIf="error" [error]="error"></tui-error>
+
+    <div class="flex justify-between text-sm font-bold">
+      <a tuiLink (click)="registerClick.emit()">Реєстрація</a>
+    </div>
+
+    <button type="submit" tuiButton size="m" appearance="primary">
+      Увійти
+    </button>
+  </form>
+</div>

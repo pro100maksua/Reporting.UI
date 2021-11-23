@@ -1,0 +1,12 @@
+<app-login
+  *ngIf="authMode === authModes.Login"
+  (registerClick)="onRegister()"
+  (forgotPasswordClick)="onForgotPassword()"
+></app-login>
+
+<app-register
+  *ngIf="authMode === authModes.Register"
+  [roles]="roles"
+  [departments]="departments"
+  (loginClick)="onLogin()"
+></app-register>

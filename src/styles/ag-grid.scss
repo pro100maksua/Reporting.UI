@@ -1,0 +1,12 @@
+@import "~ag-grid-community/src/styles/ag-grid.scss";
+@import "~ag-grid-community/src/styles/ag-theme-alpine/sass/_ag-theme-alpine-mixin.scss";
+
+.ag-theme-alpine {
+  @include ag-theme-alpine(
+    (
+      row-border-color: null,
+      range-selection-border-color: transparent,
+      input-focus-border-color: transparent,
+    )
+  );
+}

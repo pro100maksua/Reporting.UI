@@ -1,0 +1,36 @@
+<form [formGroup]="form">
+  <div class="w-full">
+    <div class="tui-form__row">
+      <tui-input formControlName="title">Назва</tui-input>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input-count formControlName="year">Рік Проведення</tui-input-count>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input formControlName="location">Місце Проведення</tui-input>
+    </div>
+
+    <div class="tui-form__buttons tui-form__buttons_align_end">
+      <button
+        tuiButton
+        class="tui-form__button"
+        type="submit"
+        (click)="save()"
+        [disabled]="!form.valid"
+      >
+        Зберегти
+      </button>
+      <button
+        tuiButton
+        type="button"
+        class="tui-form__button"
+        appearance="flat"
+        (click)="cancel()"
+      >
+        Скасувати
+      </button>
+    </div>
+  </div>
+</form>
