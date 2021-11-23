@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: ./dist/reporting-ui
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,4 +52,4 @@ jobs:
           app-name: 'uni-science-reporting'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_222211A661BB4B55ACF07356CEFA44FC }}
-          package: ./dist/reporting-ui
+          package: .
