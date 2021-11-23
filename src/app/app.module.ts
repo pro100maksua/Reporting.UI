@@ -12,14 +12,9 @@ import {
 } from "@taiga-ui/core";
 import { TUI_LANGUAGE, TUI_UKRAINIAN_LANGUAGE } from "@taiga-ui/i18n";
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import {
-  NgxUiLoaderConfig,
-  NgxUiLoaderModule,
-  PB_DIRECTION,
-  POSITION,
-  SPINNER,
-} from "ngx-ui-loader";
+import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER } from "ngx-ui-loader";
 import { of } from "rxjs";
+import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
@@ -37,7 +32,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 
 const jwtOptionsFactory = (authService: AuthService) => ({
   tokenGetter: () => authService.tokenGetter(),
-  allowedDomains: ["localhost:5001"],
+  allowedDomains: [environment.allowedDomains],
 });
 
 @NgModule({

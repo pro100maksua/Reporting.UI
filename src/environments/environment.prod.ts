@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: "https://localhost:5001",
+  apiUrl: "https://uni-science-reporting-api.azurewebsites.net",
+  allowedDomains: "uni-science-reporting-api.azurewebsites.net",
 };
