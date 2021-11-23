@@ -10,6 +10,8 @@ import { FormControl } from "@angular/forms";
 import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
+import { saveAs } from "file-saver";
+import { NgxUiLoaderService } from "ngx-ui-loader";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { AuthService } from "src/app/core/services/auth.service";
@@ -103,6 +105,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     private authService: AuthService,
     private teacherService: TeacherService,
     private commonDialogService: CommonDialogService,
+    private loaderService: NgxUiLoaderService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
     @Inject(Injector) private injector: Injector,
     private cdr: ChangeDetectorRef
@@ -188,6 +191,22 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
       this.teacherService.updateConferencesTab();
     }
+  }
+
+  public async downloadReport3() {
+    this.loaderService.start();
+
+    try {
+      const file = await lastValueFrom(
+        this.teacherService.getUserReport3File()
+      );
+
+      saveAs(file);
+    } catch (err: any) {
+      this.teacherService.showRequestError(err);
+    }
+
+    this.loaderService.stop();
   }
 
   public async refresh() {

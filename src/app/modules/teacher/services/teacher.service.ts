@@ -91,6 +91,12 @@ export class TeacherService extends BaseService {
     );
   }
 
+  public getUserReport3File() {
+    return this.httpClient.get(`${this.baseUrl}/Publications/UserReport3File`, {
+      responseType: "blob",
+    });
+  }
+
   public getConferences() {
     return this.httpClient.get<Conference[]>(
       `${this.baseUrl}/Conferences/Conferences`
