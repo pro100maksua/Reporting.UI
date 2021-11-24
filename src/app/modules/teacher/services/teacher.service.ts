@@ -8,6 +8,8 @@ import { CommonDialogService } from "src/app/core/services/common-dialog.service
 import { Conference } from "../models/conference";
 import { Publication } from "../models/publication";
 import { NewPublication } from "../models/publication-new";
+import { StudentsWorkEntry } from "../models/students-work-entry";
+import { NewStudentsWorkEntry } from "../models/students-work-entry-new";
 
 @Injectable()
 export class TeacherService extends BaseService {
@@ -120,6 +122,44 @@ export class TeacherService extends BaseService {
   public deleteConference(id: number) {
     return this.httpClient.delete<Conference>(
       `${this.baseUrl}/Conferences/Conferences/${id}`
+    );
+  }
+
+  public getStudentsWorkTypes() {
+    return this.httpClient.get<ComboboxItem[]>(
+      `${this.baseUrl}/StudentsWork/StudentsWorkTypes`
+    );
+  }
+
+  public getStudentsScientificWorkTypes() {
+    return this.httpClient.get<ComboboxItem[]>(
+      `${this.baseUrl}/StudentsWork/StudentsScientificWorkTypes`
+    );
+  }
+
+  public getStudentsWorkEntries() {
+    return this.httpClient.get<StudentsWorkEntry[]>(
+      `${this.baseUrl}/StudentsWork/StudentsWorkEntries`
+    );
+  }
+
+  public createStudentsWorkEntry(data: NewStudentsWorkEntry) {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/StudentsWork/StudentsWorkEntries`,
+      data
+    );
+  }
+
+  public updateStudentsWorkEntry(id: number, data: NewStudentsWorkEntry) {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/StudentsWork/StudentsWorkEntries/${id}`,
+      data
+    );
+  }
+
+  public deleteStudentsWorkEntry(id: number) {
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/StudentsWork/StudentsWorkEntries/${id}`
     );
   }
 }
