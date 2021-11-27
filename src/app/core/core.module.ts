@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterModule } from "@angular/router";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import {
   TuiButtonModule,
@@ -22,6 +23,7 @@ import {
   TuiRadioListModule,
   TuiRadioModule,
   TuiSelectModule,
+  TuiTabsModule,
 } from "@taiga-ui/kit";
 import { HeaderComponent } from "./components/header/header.component";
 import { UpdateUserComponent } from "./components/update-user/update-user.component";
@@ -32,6 +34,7 @@ import { UpdateUserComponent } from "./components/update-user/update-user.compon
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
     FontAwesomeModule,
     TuiHostedDropdownModule,
     TuiSvgModule,
@@ -50,6 +53,7 @@ import { UpdateUserComponent } from "./components/update-user/update-user.compon
     TuiRadioListModule,
     TuiSelectModule,
     TuiButtonModule,
+    TuiTabsModule,
   ],
   exports: [HeaderComponent],
 })

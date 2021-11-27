@@ -11,6 +11,7 @@ import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
 import { lastValueFrom } from "rxjs";
+import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
@@ -79,6 +80,9 @@ export class StudentsWorkComponent extends BaseComponent implements OnInit {
 
   private entriesTable: GridApi;
 
+  private studentsWorkTypes: ComboboxItem[] = [];
+  private scientificWorkTypes: ComboboxItem[] = [];
+
   constructor(
     private teacherService: TeacherService,
     private commonDialogService: CommonDialogService,
@@ -91,6 +95,8 @@ export class StudentsWorkComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.getStudentsWorkEntries();
+    this.getStudentsWorkTypes();
+    this.getStudentsScientificWorkTypes();
 
     this.subscribeToChanges();
   }
@@ -169,6 +175,24 @@ export class StudentsWorkComponent extends BaseComponent implements OnInit {
     }
   }
 
+  private async getStudentsWorkTypes() {
+    try {
+      this.studentsWorkTypes = await lastValueFrom(this.teacherService.getStudentsWorkTypes());
+    } catch (err: any) {
+      this.teacherService.showRequestError(err);
+    }
+  }
+
+  private async getStudentsScientificWorkTypes() {
+    try {
+      this.scientificWorkTypes = await lastValueFrom(
+        this.teacherService.getStudentsScientificWorkTypes()
+      );
+    } catch (err: any) {
+      this.teacherService.showRequestError(err);
+    }
+  }
+
   private subscribeToChanges() {
     this.searchCtrl.valueChanges.pipe(this.takeUntilDestroy()).subscribe((search) => {
       this.resetEntriesSelection();
@@ -190,7 +214,12 @@ export class StudentsWorkComponent extends BaseComponent implements OnInit {
           closeable: false,
           label: options.dialogTitle,
           size: "l",
-          data: { ...data, ...options },
+          data: {
+            ...data,
+            ...options,
+            studentsWorkTypes: this.studentsWorkTypes,
+            scientificWorkTypes: this.scientificWorkTypes,
+          },
         }
       )
     );
