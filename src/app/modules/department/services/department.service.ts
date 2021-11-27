@@ -6,6 +6,8 @@ import { BaseService } from "src/app/core/services/base.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Publication } from "../../teacher/models/publication";
 import { NewPublication } from "../../teacher/models/publication-new";
+import { CreativeConnection } from "../models/creative-connection";
+import { NewCreativeConnection } from "../models/creative-connection-new";
 
 @Injectable()
 export class DepartmentService extends BaseService {
@@ -70,5 +72,37 @@ export class DepartmentService extends BaseService {
       params,
       responseType: "blob",
     });
+  }
+
+  public getCreativeConnectionTypes() {
+    return this.httpClient.get<ComboboxItem[]>(
+      `${this.baseUrl}/CreativeConnections/CreativeConnectionTypes`
+    );
+  }
+
+  public getCreativeConnections() {
+    return this.httpClient.get<CreativeConnection[]>(
+      `${this.baseUrl}/CreativeConnections/CreativeConnections`
+    );
+  }
+
+  public createCreativeConnection(data: NewCreativeConnection) {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/CreativeConnections/CreativeConnections`,
+      data
+    );
+  }
+
+  public updateCreativeConnection(id: number, data: NewCreativeConnection) {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/CreativeConnections/CreativeConnections/${id}`,
+      data
+    );
+  }
+
+  public deleteCreativeConnection(id: number) {
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/CreativeConnections/CreativeConnections/${id}`
+    );
   }
 }

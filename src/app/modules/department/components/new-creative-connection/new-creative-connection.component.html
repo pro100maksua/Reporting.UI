@@ -1,0 +1,43 @@
+<form [formGroup]="form">
+  <div class="w-full">
+    <div class="tui-form__row">
+      <tui-select
+        formControlName="typeId"
+        [valueContent]="taigaService.stringify(creativeConnectionTypes)"
+      >
+        Тип
+
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button *ngFor="let type of creativeConnectionTypes" tuiOption [value]="type.id">
+              {{ type.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input formControlName="name">Назва</tui-input>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input formControlName="address">Адреса</tui-input>
+    </div>
+
+    <div class="tui-form__buttons tui-form__buttons_align_end">
+      <button
+        tuiButton
+        class="tui-form__button"
+        type="submit"
+        (click)="save()"
+        [disabled]="!form.valid"
+      >
+        Зберегти
+      </button>
+      <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
+        Скасувати
+      </button>
+    </div>
+  </div>
+</form>
