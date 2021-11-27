@@ -9,11 +9,7 @@
 
         <ng-template tuiDataList>
           <tui-data-list>
-            <button
-              *ngFor="let type of publicationTypes"
-              tuiOption
-              [value]="type.id"
-            >
+            <button *ngFor="let type of publicationTypes" tuiOption [value]="type.id">
               {{ type.name }}
             </button>
           </tui-data-list>
@@ -28,29 +24,19 @@
     </div>
 
     <div class="tui-form__row">
-      <tui-input formControlName="title" [tuiTextfieldCleaner]="true"
-        >Назва</tui-input
-      >
+      <tui-input formControlName="title" [tuiTextfieldCleaner]="true">Назва</tui-input>
     </div>
 
     <div class="tui-form__row" *ngIf="isScopus">
-      <tui-input formControlName="scopusAuthors" [readOnly]="isScopus"
-        >Автори</tui-input
-      >
+      <tui-input formControlName="scopusAuthors" [readOnly]="isScopus">Автори</tui-input>
     </div>
 
     <div class="tui-form__row">
-      <tui-input formControlName="publicationTitle" [readOnly]="isScopus"
-        >Видавництво</tui-input
-      >
+      <tui-input formControlName="publicationTitle" [readOnly]="isScopus">Видавництво</tui-input>
     </div>
 
     <div class="tui-form__row">
-      <tui-input-count
-        formControlName="publicationYear"
-        [readOnly]="isScopus"
-        [max]="currentYear"
-      >
+      <tui-input-count formControlName="publicationYear" [readOnly]="isScopus" [max]="currentYear">
         Рік Видання
       </tui-input-count>
     </div>
@@ -69,10 +55,18 @@
       </div>
     </div>
 
-    <div class="tui-form__row">
-      <tui-input-number formControlName="printedPagesCount">
-        Кількість Друкованих Аркушів
-      </tui-input-number>
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <div class="tui-form__multi-field">
+        <tui-input-count formControlName="citingPaperCount" [readOnly]="isScopus">
+          Кількість цитувань
+        </tui-input-count>
+      </div>
+
+      <div class="tui-form__multi-field">
+        <tui-input-number formControlName="printedPagesCount">
+          Кількість Друкованих Аркушів
+        </tui-input-number>
+      </div>
     </div>
 
     <div class="tui-form__buttons tui-form__buttons_align_end">
@@ -85,13 +79,7 @@
       >
         Зберегти
       </button>
-      <button
-        tuiButton
-        type="button"
-        class="tui-form__button"
-        appearance="flat"
-        (click)="cancel()"
-      >
+      <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
         Скасувати
       </button>
     </div>
