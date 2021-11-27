@@ -61,11 +61,13 @@ export class NewStudentsWorkEntryComponent extends BaseComponent implements OnIn
 
     this.subscribeToChanges();
 
+    this.studentsWorkTypes = this.dialogContext.data.studentsWorkTypes;
+    this.scientificWorkTypes = this.dialogContext.data.scientificWorkTypes;
+
     if (this.dialogContext.data.edit) {
       this.setData();
     }
 
-    await Promise.all([this.getStudentsWorkTypes(), this.getStudentsScientificWorkTypes()]);
     this.cdr.markForCheck();
   }
 
@@ -97,24 +99,6 @@ export class NewStudentsWorkEntryComponent extends BaseComponent implements OnIn
     }
   }
 
-  private async getStudentsWorkTypes() {
-    try {
-      this.studentsWorkTypes = await lastValueFrom(this.teacherService.getStudentsWorkTypes());
-    } catch (err: any) {
-      this.teacherService.showRequestError(err);
-    }
-  }
-
-  private async getStudentsScientificWorkTypes() {
-    try {
-      this.scientificWorkTypes = await lastValueFrom(
-        this.teacherService.getStudentsScientificWorkTypes()
-      );
-    } catch (err: any) {
-      this.teacherService.showRequestError(err);
-    }
-  }
-
   private setData() {
     this.form.patchValue(this.dialogContext.data);
   }
@@ -132,11 +116,15 @@ export class NewStudentsWorkEntryComponent extends BaseComponent implements OnIn
   private onTypeChange(typeId: number) {
     this.selectedTypeValue = this.studentsWorkTypes.find((t) => t.id === typeId)?.value;
 
+    if (!this.selectedTypeValue) {
+      return;
+    }
+
     if (this.selectedTypeValue === STUDENTS_WORK_TYPES.participationInScientificWork) {
       this.form.controls.scientificWorkTypeId.setValidators(Validators.required);
     } else {
       this.form.controls.scientificWorkTypeId.patchValue(null);
-      this.form.controls.scientificWorkTypeId.removeValidators(Validators.required);
+      this.form.controls.scientificWorkTypeId.clearValidators();
     }
 
     if (
@@ -153,29 +141,37 @@ export class NewStudentsWorkEntryComponent extends BaseComponent implements OnIn
       this.form.controls.place.setValidators(Validators.required);
     } else {
       this.form.controls.name.patchValue(null);
-      this.form.controls.name.removeValidators(Validators.required);
+      this.form.controls.name.clearValidators();
 
       this.form.controls.group.patchValue(null);
-      this.form.controls.group.removeValidators(Validators.required);
+      this.form.controls.group.clearValidators();
 
       this.form.controls.specialty.patchValue(null);
-      this.form.controls.specialty.removeValidators(Validators.required);
+      this.form.controls.specialty.clearValidators();
 
       this.form.controls.place.patchValue(null);
-      this.form.controls.place.removeValidators(Validators.required);
+      this.form.controls.place.clearValidators();
     }
 
     if (this.selectedTypeValue !== STUDENTS_WORK_TYPES.publishedArticleAbstracts) {
       this.form.controls.independently.patchValue(false);
     }
 
-    this.form.updateValueAndValidity();
+    this.form.controls.scientificWorkTypeId.updateValueAndValidity();
+    this.form.controls.name.updateValueAndValidity();
+    this.form.controls.group.updateValueAndValidity();
+    this.form.controls.specialty.updateValueAndValidity();
+    this.form.controls.place.updateValueAndValidity();
   }
 
   private onScientificWorkTypeChange(typeId: number) {
     this.selectedScientificWorkTypeValue = this.scientificWorkTypes.find(
       (t) => t.id === typeId
     )?.value;
+
+    if (!this.selectedScientificWorkTypeValue) {
+      return;
+    }
 
     if (
       this.selectedScientificWorkTypeValue === STUDENTS_SCIENTIFIC_WORK_TYPES.theoreticalSeminar ||
@@ -186,9 +182,9 @@ export class NewStudentsWorkEntryComponent extends BaseComponent implements OnIn
       this.form.controls.scientificWorkName.setValidators(Validators.required);
     } else {
       this.form.controls.scientificWorkName.patchValue(null);
-      this.form.controls.scientificWorkName.removeValidators(Validators.required);
+      this.form.controls.scientificWorkName.clearValidators();
     }
 
-    this.form.updateValueAndValidity();
+    this.form.controls.scientificWorkName.updateValueAndValidity();
   }
 }

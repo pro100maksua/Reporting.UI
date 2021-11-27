@@ -1,0 +1,15 @@
+<div class="grid grid-cols-2 gap-2 p-2" style="width: 230px">
+  <tui-checkbox-labeled *ngFor="let item of items; let i = index" [formControl]="controls[i]">
+    {{ item.title }}
+  </tui-checkbox-labeled>
+
+  <button
+    class="col-span-2 ml-auto font-bold w-12"
+    tuiButton
+    size="s"
+    appearance="outline"
+    (click)="downloadReports()"
+  >
+    Ок
+  </button>
+</div>

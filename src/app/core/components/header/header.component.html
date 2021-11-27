@@ -1,14 +1,16 @@
 <header class="header">
+  <tui-tabs class="h-full">
+    <a class="text-base font-medium" tuiTab routerLink="/teacher" routerLinkActive=>Викладач</a>
+    <a class="text-base font-medium" tuiTab routerLink="/department" routerLinkActive>Кафедра</a>
+    <a class="text-base font-medium" tuiTab routerLink="/faculty" routerLinkActive>Факультет</a>
+  </tui-tabs>
+
   <div class="ml-auto flex items-center gap-1">
     <tui-hosted-dropdown [content]="dropdown" [(open)]="open">
       <div class="font-bold cursor-pointer">
         {{ user?.firstName }} {{ user?.lastName }}
 
-        <tui-svg
-          class="arrow"
-          [class.arrow_open]="open"
-          src="tuiIconChevronDown"
-        ></tui-svg>
+        <tui-svg class="arrow" [class.arrow_open]="open" src="tuiIconChevronDown"></tui-svg>
       </div>
     </tui-hosted-dropdown>
 

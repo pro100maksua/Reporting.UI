@@ -15,17 +15,24 @@ const routes: Routes = [
       {
         path: "teacher",
         loadChildren: () =>
-          import("../app/modules/teacher/teacher.module").then(
-            (m) => m.TeacherModule
-          ),
+          import("../app/modules/teacher/teacher.module").then((m) => m.TeacherModule),
+      },
+      {
+        path: "department",
+        loadChildren: () =>
+          import("../app/modules/department/department.module").then((m) => m.DepartmentModule),
+      },
+      {
+        path: "faculty",
+        loadChildren: () =>
+          import("../app/modules/faculty/faculty.module").then((m) => m.FacultyModule),
       },
     ],
     canActivate: [AuthGuard],
   },
   {
     path: "auth",
-    loadChildren: () =>
-      import("../app/modules/auth/auth.module").then((m) => m.AuthModule),
+    loadChildren: () => import("../app/modules/auth/auth.module").then((m) => m.AuthModule),
     canActivate: [LoginGuard],
   },
 ];
