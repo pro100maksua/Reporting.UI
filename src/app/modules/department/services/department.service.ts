@@ -6,6 +6,8 @@ import { BaseService } from "src/app/core/services/base.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Publication } from "../../teacher/models/publication";
 import { NewPublication } from "../../teacher/models/publication-new";
+import { ActivityIndicator } from "../models/activity-indicator";
+import { NewActivityIndicator } from "../models/activity-indicator-new";
 import { CreativeConnection } from "../models/creative-connection";
 import { NewCreativeConnection } from "../models/creative-connection-new";
 
@@ -103,6 +105,39 @@ export class DepartmentService extends BaseService {
   public deleteCreativeConnection(id: number) {
     return this.httpClient.delete<void>(
       `${this.baseUrl}/CreativeConnections/CreativeConnections/${id}`
+    );
+  }
+
+  public getActivityIndicators() {
+    return this.httpClient.get<ActivityIndicator[]>(
+      `${this.baseUrl}/ActivityIndicators/ActivityIndicators`
+    );
+  }
+
+  public getActivityIndicator(year: number) {
+    return this.httpClient.get<ActivityIndicator>(
+      `${this.baseUrl}/ActivityIndicators/ActivityIndicator`,
+      { params: { year } }
+    );
+  }
+
+  public createActivityIndicator(data: NewActivityIndicator) {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/ActivityIndicators/ActivityIndicators`,
+      data
+    );
+  }
+
+  public updateActivityIndicator(id: number, data: NewActivityIndicator) {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/ActivityIndicators/ActivityIndicators/${id}`,
+      data
+    );
+  }
+
+  public deleteActivityIndicator(id: number) {
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/ActivityIndicators/ActivityIndicators/${id}`
     );
   }
 }
