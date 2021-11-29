@@ -9,6 +9,8 @@ import { PublicationsComponent } from "./components/publications/publications.co
 import { DepartmentRoutingModule } from "./department-routing.module";
 import { DepartmentComponent } from "./pages/department/department.component";
 import { DepartmentService } from "./services/department.service";
+import { ActivityIndicatorsComponent } from './components/activity-indicators/activity-indicators.component';
+import { NewActivityIndicatorComponent } from './components/new-activity-indicator/new-activity-indicator.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { DepartmentService } from "./services/department.service";
     DownloadReportsComponent,
     CreativeConnectionsComponent,
     NewCreativeConnectionComponent,
+    ActivityIndicatorsComponent,
+    NewActivityIndicatorComponent,
   ],
   imports: [CommonModule, DepartmentRoutingModule, SharedModule],
   providers: [DepartmentService],

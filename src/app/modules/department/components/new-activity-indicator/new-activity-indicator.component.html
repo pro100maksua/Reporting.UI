@@ -1,0 +1,322 @@
+<form class="flex flex-col gap-y-5" [formGroup]="form">
+  <tui-input-count formControlName="year">Рік</tui-input-count>
+
+  <tui-accordion>
+    <tui-accordion-item
+      size="s"
+      borders="top-bottom"
+      *ngIf="!expandedAccordionItem || expandedAccordionItem === 1"
+      (click)="selectAccordionItem(1, $event)"
+    >
+      Наукові, науково-педагогічні кадри
+
+      <ng-template tuiAccordionItemContent>
+        <div class="flex flex-col gap-y-5">
+          <tui-input-count tuiTextfieldSize="m" formControlName="scientificPedagogicalWorkersCount">
+            Чисельність наукових та науково-педагогічних працівників, всього:
+          </tui-input-count>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="fullTimeWorkersCount">
+            Чисельність штатних науково-педагогічних працівників, всього:
+          </tui-input-count>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input-count>
+          </div>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="partTimeWorkersCount">
+            Чисельність сумісників та осіб, які працюють за договорами цивільно-правового характеру
+          </tui-input-count>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input-count>
+          </div>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="scientificActivityWorkersCount">
+            Чисельність науково-педагогічних працівників, які виконують НДДКР, всього:
+          </tui-input-count>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input-count>
+          </div>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+
+    <tui-accordion-item
+      size="s"
+      borders="top-bottom"
+      *ngIf="!expandedAccordionItem || expandedAccordionItem === 2"
+      [hidden]="true"
+      (click)="selectAccordionItem(2, $event)"
+    >
+      Підготовка наукових кадрів
+
+      <ng-template tuiAccordionItemContent>
+        <div class="flex flex-col gap-y-5">
+          <tui-input-count tuiTextfieldSize="m" formControlName="doctoralStudentsCount">
+            Кількість докторантів
+          </tui-input-count>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="graduateStudentsCount">
+            Кількість аспірантів
+          </tui-input-count>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="graduateStudentsWithBreakFromProductionCount"
+            >
+              З відривом від виробництва
+            </tui-input-count>
+          </div>
+
+          <tui-input-count
+            tuiTextfieldSize="m"
+            formControlName="defendedCandidateDissertationsCount"
+          >
+            Кількість захищених кандидатських дисертацій
+          </tui-input-count>
+
+          <tui-input-count
+            tuiTextfieldSize="m"
+            formControlName="defendedDoctoralDissertationsCount"
+          >
+            Кількість захищених докторських дисертацій
+          </tui-input-count>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+
+    <tui-accordion-item
+      size="s"
+      borders="top-bottom"
+      *ngIf="!expandedAccordionItem || expandedAccordionItem === 3"
+      (click)="selectAccordionItem(3, $event)"
+    >
+      Фінансування НДДКР
+
+      <ng-template tuiAccordionItemContent>
+        <div class="flex flex-col gap-y-5">
+          <div class="flex gap-x-5">
+            <tui-input-number
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="stateBudgetFundFinancing"
+            >
+              Обсяг фінансування із загального фонду держбюджету, тис. грн.:
+            </tui-input-number>
+
+            <tui-input-count
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="stateBudgetFundNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input-count>
+          </div>
+
+          <div class="flex gap-x-5">
+            <tui-input-number
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="atExpenseOfCustomersFinancing"
+            >
+              Обсяг фінансування за рахунок коштів замовників, тис. грн.:
+            </tui-input-number>
+
+            <tui-input-count
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="atExpenseOfCustomersNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input-count>
+          </div>
+
+          <div class="flex gap-x-5">
+            <tui-input-number
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="internationalFundsFinancing"
+            >
+              Обсяг фінансування від міжнародних фондів, тис. грн.:
+            </tui-input-number>
+
+            <tui-input-count
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="internationalFundsNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input-count>
+          </div>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+
+    <tui-accordion-item
+      size="s"
+      borders="top-bottom"
+      *ngIf="!expandedAccordionItem || expandedAccordionItem === 4"
+      (click)="selectAccordionItem(4, $event)"
+    >
+      Результативні показники виконання НДДКР
+
+      <ng-template tuiAccordionItemContent>
+        <div class="flex flex-col gap-y-5">
+          <tui-input-count tuiTextfieldSize="m" formControlName="completedWorksCount">
+            Кількість закінчених робіт
+          </tui-input-count>
+
+          <div class="flex gap-x-5">
+            <div class="text-right font-bold" style="width: 260px">
+              Впроваджено результатів розробок у:
+            </div>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="developmentResultsInProductionCount"
+            >
+              Виробництво
+            </tui-input-count>
+
+            <tui-input-count
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="developmentResultsInLearningProcessCount"
+            >
+              Навчальний процес
+            </tui-input-count>
+          </div>
+
+          <tui-input-count
+            tuiTextfieldSize="m"
+            formControlName="applicationsForSecurityDocumentsCount"
+          >
+            Подано заявок на видачу охоронних документів
+          </tui-input-count>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="receivedSecurityDocumentsCount">
+            Отримано охоронних документів
+          </tui-input-count>
+
+          <tui-input-count tuiTextfieldSize="m" formControlName="inventorsCount">
+            Кількість винахідників (чол.)
+          </tui-input-count>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+
+    <tui-accordion-item
+      size="s"
+      borders="top-bottom"
+      *ngIf="!expandedAccordionItem || expandedAccordionItem === 5"
+      (click)="selectAccordionItem(5, $event)"
+    >
+      Конференції
+
+      <ng-template tuiAccordionItemContent>
+        <div class="flex flex-col gap-y-5">
+          <tui-input-count
+            tuiTextfieldSize="m"
+            formControlName="conferencesSeminarsRoundTablesCount"
+          >
+            Кількість проведених наукових конференцій, семінарів і круглих столів
+          </tui-input-count>
+        </div>
+      </ng-template>
+    </tui-accordion-item>
+  </tui-accordion>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      class="tui-form__button"
+      type="submit"
+      (click)="save()"
+      [disabled]="!form.valid"
+    >
+      Зберегти
+    </button>
+    <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
+      Скасувати
+    </button>
+  </div>
+</form>
