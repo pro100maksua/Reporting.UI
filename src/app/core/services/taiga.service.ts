@@ -13,8 +13,8 @@ export class TaigaService {
       return () => "";
     }
 
-    const value = options.value ?? "id";
-    const label = options.label ?? "name";
+    const value = options?.value ?? "id";
+    const label = options?.label ?? "name";
 
     const map = new Map(items.map((i) => [i[value], i[label]]));
 
