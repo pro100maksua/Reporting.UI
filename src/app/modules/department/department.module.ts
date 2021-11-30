@@ -11,6 +11,8 @@ import { DepartmentComponent } from "./pages/department/department.component";
 import { DepartmentService } from "./services/department.service";
 import { ActivityIndicatorsComponent } from './components/activity-indicators/activity-indicators.component';
 import { NewActivityIndicatorComponent } from './components/new-activity-indicator/new-activity-indicator.component';
+import { DissertationsComponent } from './components/dissertations/dissertations.component';
+import { NewDissertationComponent } from './components/new-dissertation/new-dissertation.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { NewActivityIndicatorComponent } from './components/new-activity-indicat
     NewCreativeConnectionComponent,
     ActivityIndicatorsComponent,
     NewActivityIndicatorComponent,
+    DissertationsComponent,
+    NewDissertationComponent,
   ],
   imports: [CommonModule, DepartmentRoutingModule, SharedModule],
   providers: [DepartmentService],
