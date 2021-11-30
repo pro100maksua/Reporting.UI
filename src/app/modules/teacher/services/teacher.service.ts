@@ -6,6 +6,8 @@ import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { BaseService } from "src/app/core/services/base.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
 import { Conference } from "../models/conference";
+import { Dissertation } from "../models/dissertation";
+import { NewDissertation } from "../models/dissertation-new";
 import { Publication } from "../models/publication";
 import { NewPublication } from "../models/publication-new";
 import { StudentsWorkEntry } from "../models/students-work-entry";
@@ -128,5 +130,21 @@ export class TeacherService extends BaseService {
 
   public deleteStudentsWorkEntry(id: number) {
     return this.httpClient.delete<void>(`${this.baseUrl}/StudentsWork/StudentsWorkEntries/${id}`);
+  }
+
+  public getUserDissertations() {
+    return this.httpClient.get<Dissertation[]>(`${this.baseUrl}/Dissertations/UserDissertations`);
+  }
+
+  public createDissertation(data: NewDissertation) {
+    return this.httpClient.post<void>(`${this.baseUrl}/Dissertations/Dissertations`, data);
+  }
+
+  public updateDissertation(id: number, data: NewDissertation) {
+    return this.httpClient.put<void>(`${this.baseUrl}/Dissertations/Dissertations/${id}`, data);
+  }
+
+  public deleteDissertation(id: number) {
+    return this.httpClient.delete<void>(`${this.baseUrl}/Dissertations/Dissertations/${id}`);
   }
 }

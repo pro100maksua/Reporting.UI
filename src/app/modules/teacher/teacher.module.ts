@@ -11,6 +11,8 @@ import { NewConferenceComponent } from "./components/new-conference/new-conferen
 import { ImportScopusPublicationsComponent } from "./components/import-scopus-publications/import-scopus-publications.component";
 import { StudentsWorkComponent } from "./components/students-work/students-work.component";
 import { NewStudentsWorkEntryComponent } from "./components/new-students-work-entry/new-students-work-entry.component";
+import { NewDissertationComponent } from './components/new-dissertation/new-dissertation.component';
+import { DissertationsComponent } from './components/dissertations/dissertations.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { NewStudentsWorkEntryComponent } from "./components/new-students-work-en
     ImportScopusPublicationsComponent,
     StudentsWorkComponent,
     NewStudentsWorkEntryComponent,
+    NewDissertationComponent,
+    DissertationsComponent,
   ],
   imports: [CommonModule, TeacherRoutingModule, SharedModule],
   providers: [TeacherService],

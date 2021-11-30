@@ -1,0 +1,40 @@
+<form class="flex flex-col gap-y-5" [formGroup]="form">
+  <tui-input [readOnly]="dialogContext.data?.authorId" formControlName="authorName">ПІБ</tui-input>
+
+  <tui-input formControlName="placeOfWork">Основне Місце Роботи</tui-input>
+
+  <tui-input formControlName="supervisor">Науковий Консультант(Науковий Керівник)</tui-input>
+
+  <tui-input formControlName="specialty">Спеціальність</tui-input>
+
+  <tui-input formControlName="topic">Тема Дисертації</tui-input>
+
+  <tui-input [tuiTextfieldCleaner]="true" formControlName="deadline">Термін Закінчення</tui-input>
+
+  <tui-input-date formControlName="defenseDate">Дата Захисту</tui-input-date>
+
+  <tui-input formControlName="defensePlace">Місце Захисту</tui-input>
+
+  <tui-input-date
+    [tuiTextfieldCleaner]="true"
+    tuiUnfinishedValidator
+    formControlName="diplomaReceiptDate"
+  >
+    Дата Отримання Диплому
+  </tui-input-date>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      class="tui-form__button"
+      type="submit"
+      (click)="save()"
+      [disabled]="!form.valid"
+    >
+      Зберегти
+    </button>
+    <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
+      Скасувати
+    </button>
+  </div>
+</form>

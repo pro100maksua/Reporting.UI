@@ -14,6 +14,7 @@
 
 <tui-tabs class="mb-4" [(activeItemIndex)]="tabIndex">
   <button tuiTab>Публікації</button>
+  <button tuiTab>Дисертації</button>
   <button tuiTab>Творчі зв'язки</button>
   <button tuiTab>Показники наукової діяльності</button>
 </tui-tabs>
@@ -23,12 +24,17 @@
   [ngStyle]="{ display: tabIndex === 0 ? 'flex' : 'none' }"
 ></app-publications>
 
-<app-creative-connections
+<app-dissertations
   class="flex-1 flex-col"
   [ngStyle]="{ display: tabIndex === 1 ? 'flex' : 'none' }"
+></app-dissertations>
+
+<app-creative-connections
+  class="flex-1 flex-col"
+  [ngStyle]="{ display: tabIndex === 2 ? 'flex' : 'none' }"
 ></app-creative-connections>
 
 <app-activity-indicators
   class="flex-1 flex-col"
-  [ngStyle]="{ display: tabIndex === 2 ? 'flex' : 'none' }"
+  [ngStyle]="{ display: tabIndex === 3 ? 'flex' : 'none' }"
 ></app-activity-indicators>
