@@ -141,8 +141,6 @@ export class ActivityIndicatorsComponent extends BaseComponent implements OnInit
         await lastValueFrom(this.departmentService.deleteActivityIndicator(this.selectedRecord.id));
 
         await this.getActivityIndicators();
-
-        this.yearCtrl.patchValue(this.records[0]?.year);
       } catch (err: any) {
         this.departmentService.showRequestError(err);
       }
@@ -163,6 +161,10 @@ export class ActivityIndicatorsComponent extends BaseComponent implements OnInit
         if (this.selectedRecord) {
           this.setData(this.selectedRecord);
         }
+      }
+
+      if (!this.selectedRecord) {
+        this.yearCtrl.patchValue(this.records[0]?.year);
       }
 
       this.cdr.markForCheck();
