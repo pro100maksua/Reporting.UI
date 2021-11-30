@@ -39,7 +39,7 @@ export class NewActivityIndicatorComponent extends BaseComponent implements OnIn
     this.form = fb.group({
       year: [0, Validators.required],
 
-      scientificPedagogicalWorkersCount: [0, Validators.required],
+      scientificPedagogicalWorkersCount: [0],
 
       fullTimeWorkersCount: [0],
       fullTimeDoctorOfScienceWorkersCount: [0],
@@ -163,6 +163,8 @@ export class NewActivityIndicatorComponent extends BaseComponent implements OnIn
 
       if (activityIndicator) {
         this.form.patchValue(activityIndicator);
+      } else {
+        this.form.reset({ year });
       }
     } catch (err: any) {
       this.departmentService.showRequestError(err);
