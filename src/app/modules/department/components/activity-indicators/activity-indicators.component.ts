@@ -159,6 +159,10 @@ export class ActivityIndicatorsComponent extends BaseComponent implements OnInit
 
       if (this.selectedRecord) {
         this.selectedRecord = this.records.find((e) => e.id === this.selectedRecord.id);
+
+        if (this.selectedRecord) {
+          this.setData(this.selectedRecord);
+        }
       }
 
       this.cdr.markForCheck();
@@ -172,12 +176,7 @@ export class ActivityIndicatorsComponent extends BaseComponent implements OnInit
       this.selectedRecord = this.records.find((e) => e.year === year);
 
       if (this.selectedRecord) {
-        const formData = Object.entries(this.selectedRecord).reduce((obj: any, [key, value]) => {
-          obj[key] = value.toString ? value.toString() : value;
-          return obj;
-        }, {});
-
-        this.form.patchValue(formData);
+        this.setData(this.selectedRecord);
       }
     });
   }
@@ -194,5 +193,14 @@ export class ActivityIndicatorsComponent extends BaseComponent implements OnInit
         }
       )
     );
+  }
+
+  private setData(record: ActivityIndicator) {
+    const formData = Object.entries(record).reduce((obj: any, [key, value]) => {
+      obj[key] = value.toString ? value.toString() : value;
+      return obj;
+    }, {});
+
+    this.form.patchValue(formData);
   }
 }
