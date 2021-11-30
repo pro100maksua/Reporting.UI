@@ -26,6 +26,53 @@ export class NewActivityIndicatorComponent extends BaseComponent implements OnIn
 
   public expandedAccordionItem: number;
 
+  private defaultForm = {
+    scientificPedagogicalWorkersCount: 0,
+
+    fullTimeWorkersCount: 0,
+    fullTimeDoctorOfScienceWorkersCount: 0,
+    fullTimeCandidatesOfScienceWorkersCount: 0,
+    fullTimeNoDegreeWorkersCount: 0,
+
+    partTimeWorkersCount: 0,
+    partTimeDoctorOfScienceWorkersCount: 0,
+    partTimeCandidatesOfScienceWorkersCount: 0,
+    partTimeNoDegreeWorkersCount: 0,
+
+    scientificActivityWorkersCount: 0,
+    scientificActivityDoctorOfScienceWorkersCount: 0,
+    scientificActivityCandidatesOfScienceWorkersCount: 0,
+    scientificActivityNoDegreeWorkersCount: 0,
+
+    doctoralStudentsCount: 0,
+    graduateStudentsCount: 0,
+    graduateStudentsWithBreakFromProductionCount: 0,
+
+    defendedCandidateDissertationsCount: 0,
+    defendedDoctoralDissertationsCount: 0,
+
+    stateBudgetFundFinancing: 0,
+    stateBudgetFundNumberOfWorks: 0,
+
+    atExpenseOfCustomersFinancing: 0,
+    atExpenseOfCustomersNumberOfWorks: 0,
+
+    internationalFundsFinancing: 0,
+    internationalFundsNumberOfWorks: 0,
+
+    completedWorksCount: 0,
+
+    developmentResultsInProductionCount: 0,
+    developmentResultsInLearningProcessCount: 0,
+
+    applicationsForSecurityDocumentsCount: 0,
+    receivedSecurityDocumentsCount: 0,
+
+    inventorsCount: 0,
+
+    conferencesSeminarsRoundTablesCount: 0,
+  };
+
   constructor(
     fb: FormBuilder,
     private departmentService: DepartmentService,
@@ -161,11 +208,7 @@ export class NewActivityIndicatorComponent extends BaseComponent implements OnIn
         this.departmentService.getActivityIndicator(year)
       );
 
-      if (activityIndicator) {
-        this.form.patchValue(activityIndicator);
-      } else {
-        this.form.reset({ year });
-      }
+      this.form.patchValue(activityIndicator ?? { year, ...this.defaultForm });
     } catch (err: any) {
       this.departmentService.showRequestError(err);
     }
