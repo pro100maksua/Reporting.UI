@@ -1,0 +1,130 @@
+<form [formGroup]="form">
+  <div class="w-full">
+    <div class="tui-form__row">
+      <tui-select
+        formControlName="typeId"
+        [valueContent]="taigaService.stringify(studentsWorkTypes)"
+      >
+        Тип
+
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button *ngFor="let type of studentsWorkTypes" tuiOption [value]="type.id">
+              {{ type.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="selectedTypeValue === studentsWorkTypeValues.participationInScientificWork"
+    >
+      <tui-select
+        formControlName="scientificWorkTypeId"
+        [valueContent]="taigaService.stringify(scientificWorkTypes)"
+      >
+        Тип Наукової Роботи
+
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button *ngFor="let type of scientificWorkTypes" tuiOption [value]="type.id">
+              {{ type.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="
+        selectedScientificWorkTypeValue === studentsScientificWorkTypeValues.theoreticalSeminar ||
+        selectedScientificWorkTypeValue === studentsScientificWorkTypeValues.scienceClub ||
+        selectedScientificWorkTypeValue === studentsScientificWorkTypeValues.problemGroup ||
+        selectedScientificWorkTypeValue === studentsScientificWorkTypeValues.otherForm
+      "
+    >
+      <tui-input formControlName="scientificWorkName">Назва</tui-input>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="
+        selectedTypeValue === studentsWorkTypeValues.participationInCompetitions ||
+        selectedTypeValue === studentsWorkTypeValues.receivedAwardsForTheResultsOfThe2ndRound ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfScientificWorksReceivedAwards ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfDiplomaAndMastersReceivedAwards
+      "
+    >
+      <tui-input formControlName="name">ПІБ</tui-input>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="
+        selectedTypeValue === studentsWorkTypeValues.participationInCompetitions ||
+        selectedTypeValue === studentsWorkTypeValues.receivedAwardsForTheResultsOfThe2ndRound ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfScientificWorksReceivedAwards ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfDiplomaAndMastersReceivedAwards
+      "
+    >
+      <tui-input formControlName="group">Група</tui-input>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="
+        selectedTypeValue === studentsWorkTypeValues.participationInCompetitions ||
+        selectedTypeValue === studentsWorkTypeValues.receivedAwardsForTheResultsOfThe2ndRound ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfScientificWorksReceivedAwards ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfDiplomaAndMastersReceivedAwards
+      "
+    >
+      <tui-input formControlName="specialty">Спеціальність</tui-input>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="
+        selectedTypeValue === studentsWorkTypeValues.participationInCompetitions ||
+        selectedTypeValue === studentsWorkTypeValues.receivedAwardsForTheResultsOfThe2ndRound ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfScientificWorksReceivedAwards ||
+        selectedTypeValue ===
+          studentsWorkTypeValues.participationInCompetitionsOfDiplomaAndMastersReceivedAwards
+      "
+    >
+      <tui-input formControlName="place">Зайняте місте</tui-input>
+    </div>
+
+    <div
+      class="tui-form__row"
+      *ngIf="selectedTypeValue === studentsWorkTypeValues.publishedArticleAbstracts"
+    >
+      <tui-checkbox-labeled formControlName="independently">Самостійно</tui-checkbox-labeled>
+    </div>
+
+    <div class="tui-form__buttons tui-form__buttons_align_end">
+      <button
+        tuiButton
+        class="tui-form__button"
+        type="submit"
+        (click)="save()"
+        [disabled]="!form.valid"
+      >
+        Зберегти
+      </button>
+      <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
+        Скасувати
+      </button>
+    </div>
+  </div>
+</form>

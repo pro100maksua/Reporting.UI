@@ -1,0 +1,338 @@
+<div class="flex flex-col flex-1">
+  <div class="flex-row">
+    <tui-select
+      class="page-filter"
+      [formControl]="yearCtrl"
+      [valueContent]="taigaService.stringify(records, { value: 'year', label: 'year' })"
+    >
+      Рік
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button *ngFor="let item of records" tuiOption [value]="item.year">
+            {{ item.year }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-select>
+  </div>
+
+  <div class="flex-row">
+    <button tuiButton size="m" appearance="outline" (click)="addRecord()">Додати</button>
+
+    <button tuiButton size="m" appearance="outline" (click)="editRecord()">Редагувати</button>
+
+    <button tuiButton size="m" appearance="outline" (click)="deleteRecord()">Видалити</button>
+
+    <button tuiButton size="m" appearance="outline" (click)="refresh()">Оновити</button>
+  </div>
+
+  <div class="flex justify-between" [formGroup]="form" *ngIf="selectedRecord">
+    <div style="width: 32%">
+      <div>
+        <div class="font-bold text-lg mb-2">Наукові, науково-педагогічні кадри</div>
+
+        <div class="flex flex-col gap-y-5">
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="scientificPedagogicalWorkersCount"
+          >
+            Чисельність наукових та науково-педагогічних працівників, всього:
+          </tui-input>
+
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="fullTimeWorkersCount">
+            Чисельність штатних науково-педагогічних працівників, всього:
+          </tui-input>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="fullTimeNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input>
+          </div>
+
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="partTimeWorkersCount">
+            Чисельність сумісників та осіб, які працюють за договорами цивільно-правового характеру
+          </tui-input>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="partTimeNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input>
+          </div>
+
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="scientificActivityWorkersCount"
+          >
+            Чисельність науково-педагогічних працівників, які виконують НДДКР, всього:
+          </tui-input>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityDoctorOfScienceWorkersCount"
+            >
+              Докторів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityCandidatesOfScienceWorkersCount"
+            >
+              Кандидатів наук
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="scientificActivityNoDegreeWorkersCount"
+            >
+              Без ступеня
+            </tui-input>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 32%">
+      <div class="mb-5">
+        <div class="font-bold text-lg mb-2">Підготовка наукових кадрів</div>
+
+        <div class="flex flex-col gap-y-5">
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="doctoralStudentsCount">
+            Кількість докторантів
+          </tui-input>
+
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="graduateStudentsCount">
+            Кількість аспірантів
+          </tui-input>
+
+          <div class="flex gap-x-5">
+            <div class="w-20 text-right font-bold">З них:</div>
+
+            <tui-input
+              [readOnly]="true"
+              class="flex-1"
+              tuiTextfieldSize="m"
+              formControlName="graduateStudentsWithBreakFromProductionCount"
+            >
+              З відривом від виробництва
+            </tui-input>
+          </div>
+
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="defendedCandidateDissertationsCount"
+          >
+            Кількість захищених кандидатських дисертацій
+          </tui-input>
+
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="defendedDoctoralDissertationsCount"
+          >
+            Кількість захищених докторських дисертацій
+          </tui-input>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-bold text-lg mb-2">Фінансування НДДКР</div>
+
+        <div class="flex flex-col gap-y-5">
+          <div class="flex gap-x-5">
+            <tui-input
+              [readOnly]="true"
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="stateBudgetFundFinancing"
+            >
+              Обсяг фінансування із загального фонду держбюджету, тис. грн.:
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="stateBudgetFundNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input>
+          </div>
+
+          <div class="flex gap-x-5">
+            <tui-input
+              [readOnly]="true"
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="atExpenseOfCustomersFinancing"
+            >
+              Обсяг фінансування за рахунок коштів замовників, тис. грн.:
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="atExpenseOfCustomersNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input>
+          </div>
+
+          <div class="flex gap-x-5">
+            <tui-input
+              [readOnly]="true"
+              class="w-2/3"
+              tuiTextfieldSize="m"
+              formControlName="internationalFundsFinancing"
+            >
+              Обсяг фінансування від міжнародних фондів, тис. грн.:
+            </tui-input>
+
+            <tui-input
+              [readOnly]="true"
+              class="w-1/3"
+              tuiTextfieldSize="m"
+              formControlName="internationalFundsNumberOfWorks"
+            >
+              Кількість робіт
+            </tui-input>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 32%">
+      <div class="mb-5">
+        <div class="font-bold text-lg mb-2">Результативні показники виконання НДДКР</div>
+
+        <div class="flex flex-col gap-y-5">
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="completedWorksCount">
+            Кількість закінчених робіт
+          </tui-input>
+
+          <div class="flex gap-x-5">
+            <div class="text-right font-bold" style="width: 260px">
+              Впроваджено результатів <br />
+              розробок у:
+            </div>
+
+            <tui-input
+              class="flex-1"
+              [readOnly]="true"
+              tuiTextfieldSize="m"
+              formControlName="developmentResultsInProductionCount"
+            >
+              Виробництво
+            </tui-input>
+
+            <tui-input
+              class="flex-1"
+              [readOnly]="true"
+              tuiTextfieldSize="m"
+              formControlName="developmentResultsInLearningProcessCount"
+            >
+              Навчальний процес
+            </tui-input>
+          </div>
+
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="applicationsForSecurityDocumentsCount"
+          >
+            Подано заявок на видачу охоронних документів
+          </tui-input>
+
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="receivedSecurityDocumentsCount"
+          >
+            Отримано охоронних документів
+          </tui-input>
+
+          <tui-input [readOnly]="true" tuiTextfieldSize="m" formControlName="inventorsCount">
+            Кількість винахідників (чол.)
+          </tui-input>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-bold text-lg mb-2">Конференції</div>
+
+        <div class="flex flex-col gap-y-5">
+          <tui-input
+            [readOnly]="true"
+            tuiTextfieldSize="m"
+            formControlName="conferencesSeminarsRoundTablesCount"
+          >
+            Кількість проведених наукових конференцій, семінарів і круглих столів
+          </tui-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
