@@ -6,6 +6,7 @@ import {
   OnInit,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { TuiDay } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom } from "rxjs";
@@ -87,7 +88,16 @@ export class NewDissertationComponent extends BaseComponent implements OnInit {
   }
 
   private setData() {
-    this.form.patchValue(this.dialogContext.data);
+    const defenseDate = TuiDay.fromLocalNativeDate(new Date(this.dialogContext.data.defenseDate));
+    const diplomaReceiptDate = TuiDay.fromLocalNativeDate(
+      new Date(this.dialogContext.data.diplomaReceiptDate)
+    );
+
+    this.form.patchValue({
+      ...this.dialogContext.data,
+      defenseDate,
+      diplomaReceiptDate,
+    });
   }
 
   private subscribeToChanges() {}
