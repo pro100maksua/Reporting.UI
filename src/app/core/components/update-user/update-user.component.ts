@@ -58,8 +58,10 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
     super();
 
     this.form = fb.group({
-      firstName: [null, Validators.required],
-      lastName: [null, Validators.required],
+      name: [null, Validators.required],
+      degree: [null],
+      academicStatus: [null],
+      position: [null],
       email: [
         null,
         [Validators.required, Validators.email],
@@ -96,8 +98,10 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
     const formValue = this.form.value;
 
     const data = {
-      firstName: formValue.firstName.trim(),
-      lastName: formValue.lastName.trim(),
+      name: formValue.name.trim(),
+      degree: formValue.degree?.trim(),
+      academicStatus: formValue.academicStatus?.trim(),
+      position: formValue.position?.trim(),
       email: formValue.email.trim(),
       password: formValue.password,
       departmentId: formValue.departmentId,
@@ -132,9 +136,7 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
 
   private async getDepartments() {
     try {
-      this.departments = await this.usersService.getDepartments(
-        FACULTY_VALUES.fcit
-      );
+      this.departments = await this.usersService.getDepartments(FACULTY_VALUES.fcit);
     } catch (err: any) {
       this.usersService.showRequestError(err);
     }
@@ -145,18 +147,14 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
   }
 
   private subscribeToChanges() {
-    this.form.valueChanges
-      .pipe(this.takeUntilDestroy())
-      .subscribe(() => (this.error = null));
+    this.form.valueChanges.pipe(this.takeUntilDestroy()).subscribe(() => (this.error = null));
 
     this.form.controls.password.valueChanges.subscribe(() =>
       this.form.controls.confirmPassword.updateValueAndValidity()
     );
   }
 
-  private checkPasswords: ValidatorFn = (
-    control: AbstractControl
-  ): ValidationErrors | null => {
+  private checkPasswords: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const pass = control.parent?.get("password").value;
     const confirmPass = control.value;
 
@@ -166,8 +164,7 @@ export class UpdateUserComponent extends BaseComponent implements OnInit {
   };
 
   private uniqueValidator =
-    (validate: (value: string) => Observable<any>) =>
-    (control: AbstractControl) =>
+    (validate: (value: string) => Observable<any>) => (control: AbstractControl) =>
       validate(control.value).pipe(
         map((r) => (r?.message ? { notUnique: r.message } : null)),
         tap(() => this.cdr.markForCheck())
