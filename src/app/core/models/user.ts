@@ -1,7 +1,9 @@
 export interface User {
   id: number;
-  firstName: string;
-  lastName: string;
+  name: string;
+  degree: string;
+  academicStatus: string;
+  position: string;
   email: string;
   scopusAuthorName: string;
   departmentId: string;
