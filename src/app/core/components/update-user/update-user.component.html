@@ -52,33 +52,45 @@
     ></tui-field-error>
   </div>
 
-  <div class="flex gap-x-5">
-    <label class="flex-1" tuiLabel [label]="firstNameLabel">
-      <ng-template #firstNameLabel>
-        <span class="text-sm font-bold">Ім'я</span>
-      </ng-template>
+  <label class="flex-1" tuiLabel [label]="nameLabel">
+    <ng-template #nameLabel>
+      <span class="text-sm font-bold">ПІБ</span>
+    </ng-template>
 
-      <tui-input
-        tuiTextfieldSize="m"
-        [tuiTextfieldLabelOutside]="true"
-        formControlName="firstName"
-      >
-      </tui-input>
-    </label>
+    <tui-input tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true" formControlName="name">
+    </tui-input>
+  </label>
 
-    <label class="flex-1" tuiLabel [label]="lastNameLabel">
-      <ng-template #lastNameLabel>
-        <span class="text-sm font-bold">Прізвище</span>
-      </ng-template>
+  <label class="flex-1" tuiLabel [label]="degreeLabel">
+    <ng-template #degreeLabel>
+      <span class="text-sm font-bold">Науковий Ступінь</span>
+    </ng-template>
 
-      <tui-input
-        tuiTextfieldSize="m"
-        [tuiTextfieldLabelOutside]="true"
-        formControlName="lastName"
-      >
-      </tui-input>
-    </label>
-  </div>
+    <tui-input tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true" formControlName="degree">
+    </tui-input>
+  </label>
+
+  <label class="flex-1" tuiLabel [label]="academicStatusLabel">
+    <ng-template #academicStatusLabel>
+      <span class="text-sm font-bold">Вчене Звання</span>
+    </ng-template>
+
+    <tui-input
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      formControlName="academicStatus"
+    >
+    </tui-input>
+  </label>
+
+  <label class="flex-1" tuiLabel [label]="positionLabel">
+    <ng-template #positionLabel>
+      <span class="text-sm font-bold">Посада</span>
+    </ng-template>
+
+    <tui-input tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true" formControlName="position">
+    </tui-input>
+  </label>
 
   <label tuiLabel [label]="departmentLabel">
     <ng-template #departmentLabel>
@@ -135,21 +147,10 @@
   <tui-error *ngIf="error" [error]="error"></tui-error>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
-    <button
-      tuiButton
-      class="tui-form__button"
-      type="submit"
-      [disabled]="!form.valid"
-    >
+    <button tuiButton class="tui-form__button" type="submit" [disabled]="!form.valid">
       Зберегти
     </button>
-    <button
-      tuiButton
-      type="button"
-      class="tui-form__button"
-      appearance="flat"
-      (click)="cancel()"
-    >
+    <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
       Скасувати
     </button>
   </div>
