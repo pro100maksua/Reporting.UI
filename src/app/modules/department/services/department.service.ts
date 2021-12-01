@@ -10,6 +10,8 @@ import { ActivityIndicator } from "../models/activity-indicator";
 import { NewActivityIndicator } from "../models/activity-indicator-new";
 import { CreativeConnection } from "../models/creative-connection";
 import { NewCreativeConnection } from "../models/creative-connection-new";
+import { Dissertation } from "../models/dissertation";
+import { NewDissertation } from "../models/dissertation-new";
 
 @Injectable()
 export class DepartmentService extends BaseService {
@@ -139,5 +141,23 @@ export class DepartmentService extends BaseService {
     return this.httpClient.delete<void>(
       `${this.baseUrl}/ActivityIndicators/ActivityIndicators/${id}`
     );
+  }
+
+  public getDepartmentDissertations() {
+    return this.httpClient.get<Dissertation[]>(
+      `${this.baseUrl}/Dissertations/DepartmentDissertations`
+    );
+  }
+
+  public createDissertation(data: NewDissertation) {
+    return this.httpClient.post<void>(`${this.baseUrl}/Dissertations/Dissertations`, data);
+  }
+
+  public updateDissertation(id: number, data: NewDissertation) {
+    return this.httpClient.put<void>(`${this.baseUrl}/Dissertations/Dissertations/${id}`, data);
+  }
+
+  public deleteDissertation(id: number) {
+    return this.httpClient.delete<void>(`${this.baseUrl}/Dissertations/Dissertations/${id}`);
   }
 }

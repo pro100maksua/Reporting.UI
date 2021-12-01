@@ -92,6 +92,7 @@ import {
   TuiTagModule,
   TuiTextAreaModule,
   TuiToggleModule,
+  TuiUnfinishedValidatorModule,
 } from "@taiga-ui/kit";
 
 @NgModule({
@@ -188,6 +189,7 @@ import {
     TuiMapperPipeModule,
     TuiProjectClassModule,
     TuiFilterByInputPipeModule,
+    TuiUnfinishedValidatorModule,
   ],
   exports: [
     TuiStepperModule,
@@ -280,6 +282,7 @@ import {
     TuiMapperPipeModule,
     TuiProjectClassModule,
     TuiFilterByInputPipeModule,
+    TuiUnfinishedValidatorModule,
   ],
 })
 export class TaigaUiModule {}
