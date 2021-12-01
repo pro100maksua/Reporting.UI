@@ -1,5 +1,7 @@
 <form class="flex flex-col gap-y-5" [formGroup]="form">
-  <tui-input [readOnly]="dialogContext.data?.authorId" formControlName="authorName">ПІБ</tui-input>
+  <tui-input [readOnly]="!!dialogContext.data?.authorId" formControlName="authorName">
+    ПІБ
+  </tui-input>
 
   <tui-input formControlName="placeOfWork">Основне Місце Роботи</tui-input>
 
