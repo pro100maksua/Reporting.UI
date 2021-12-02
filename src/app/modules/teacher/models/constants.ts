@@ -2,6 +2,10 @@ export const PUBLICATION_TYPES = {
   scopus: 8,
 } as const;
 
+export const CONFERENCE_TYPES = {
+  internal: 5,
+} as const;
+
 export const STUDENTS_WORK_TYPES = {
   participationInScientificWork: 1,
   participationInCompetitions: 2,

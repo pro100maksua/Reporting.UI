@@ -1,15 +1,75 @@
 <form [formGroup]="form">
   <div class="w-full">
     <div class="tui-form__row">
+      <tui-select
+        formControlName="typeId"
+        [valueContent]="taigaService.stringify(dialogContext.data.conferenceTypes)"
+      >
+        Тип
+
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button
+              *ngFor="let type of dialogContext.data.conferenceTypes"
+              tuiOption
+              [value]="type.id"
+            >
+              {{ type.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </div>
+
+    <div class="tui-form__row" *ngIf="selectedTypeValue === conferenceTypeValues.internal">
+      <tui-select
+        formControlName="subTypeId"
+        [valueContent]="taigaService.stringify(dialogContext.data.conferenceSubTypes)"
+      >
+        Підтип
+
+        <ng-template tuiDataList>
+          <tui-data-list>
+            <button
+              *ngFor="let type of dialogContext.data.conferenceSubTypes"
+              tuiOption
+              [value]="type.id"
+            >
+              {{ type.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+      </tui-select>
+    </div>
+
+    <div class="tui-form__row">
       <tui-input formControlName="title">Назва</tui-input>
     </div>
 
     <div class="tui-form__row">
-      <tui-input-count formControlName="year">Рік Проведення</tui-input-count>
+      <tui-text-area class="min-h-0" [expandable]="true" [rows]="3" formControlName="organizers">
+        Факультет(інститут, кафедра), відповідальний за проведення, адреса, телефон, е-mail
+      </tui-text-area>
     </div>
 
     <div class="tui-form__row">
       <tui-input formControlName="location">Місце Проведення</tui-input>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input-date-range tuiUnfinishedValidator formControlName="dateRange">
+        Термін Проведення
+      </tui-input-date-range>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-input-count formControlName="numberOfParticipants">Кількість Учасників</tui-input-count>
+    </div>
+
+    <div class="tui-form__row">
+      <tui-text-area class="min-h-0" [expandable]="true" [rows]="3" formControlName="coOrganizers">
+        Міністерства, відомства або установи, що є співорганізаторами заходу
+      </tui-text-area>
     </div>
 
     <div class="tui-form__buttons tui-form__buttons_align_end">
@@ -22,13 +82,7 @@
       >
         Зберегти
       </button>
-      <button
-        tuiButton
-        type="button"
-        class="tui-form__button"
-        appearance="flat"
-        (click)="cancel()"
-      >
+      <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
         Скасувати
       </button>
     </div>
