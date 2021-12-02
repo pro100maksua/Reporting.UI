@@ -9,10 +9,12 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom } from "rxjs";
+import { ComboboxItem } from "src/app/core/models/combobox-item";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { TaigaService } from "src/app/core/services/taiga.service";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { Conference } from "../../models/conference";
+import { CONFERENCE_TYPES } from "../../models/constants";
 import { TeacherService } from "../../services/teacher.service";
 
 @Component({
@@ -24,20 +26,28 @@ import { TeacherService } from "../../services/teacher.service";
 export class NewConferenceComponent extends BaseComponent implements OnInit {
   public form: FormGroup;
 
+  public conferenceTypeValues = CONFERENCE_TYPES;
+  public selectedTypeValue: number;
+
   constructor(
     fb: FormBuilder,
     private teacherService: TeacherService,
     private cdr: ChangeDetectorRef,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private dialogContext: TuiDialogContext<DialogResult, any>,
+    public dialogContext: TuiDialogContext<DialogResult, any>,
     public taigaService: TaigaService
   ) {
     super();
 
     this.form = fb.group({
+      typeId: [null, Validators.required],
+      subTypeId: [null],
       title: [null, Validators.required],
-      year: [null, Validators.required],
       location: [null],
+      organizers: [null],
+      coOrganizers: [null],
+      dateRange: [null, Validators.required],
+      numberOfParticipants: [null],
     });
   }
 
@@ -66,6 +76,8 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
 
     const data: Conference = {
       ...formData,
+      startDate: formData.dateRange.from,
+      endDate: formData.dateRange.to,
     };
 
     try {
@@ -76,9 +88,7 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
           this.teacherService.updateConference(this.dialogContext.data.id, data)
         );
       } else {
-        conference = await lastValueFrom(
-          this.teacherService.createConference(data)
-        );
+        conference = await lastValueFrom(this.teacherService.createConference(data));
       }
 
       this.dialogContext.completeWith({ success: true, data: conference });
@@ -91,5 +101,28 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
     this.form.patchValue(this.dialogContext.data, { emitEvent: false });
   }
 
-  private subscribeToChanges() {}
+  private subscribeToChanges() {
+    this.form.controls.typeId.valueChanges
+      .pipe(this.takeUntilDestroy())
+      .subscribe(async (typeId) => this.onTypeChange(typeId));
+  }
+
+  private onTypeChange(typeId: number) {
+    this.selectedTypeValue = this.dialogContext.data.conferenceTypes.find(
+      (t: ComboboxItem) => t.id === typeId
+    )?.value;
+
+    if (!this.selectedTypeValue) {
+      return;
+    }
+
+    if (this.selectedTypeValue === CONFERENCE_TYPES.internal) {
+      this.form.controls.subTypeId.setValidators(Validators.required);
+    } else {
+      this.form.controls.subTypeId.patchValue(null);
+      this.form.controls.subTypeId.clearValidators();
+    }
+
+    this.form.controls.subTypeId.updateValueAndValidity();
+  }
 }
