@@ -85,8 +85,21 @@ export class TeacherService extends BaseService {
     });
   }
 
-  public getConferences() {
-    return this.httpClient.get<Conference[]>(`${this.baseUrl}/Conferences/Conferences`);
+  public getConferenceTypes() {
+    return this.httpClient.get<ComboboxItem[]>(`${this.baseUrl}/Conferences/ConferenceTypes`);
+  }
+
+  public getConferenceSubTypes() {
+    return this.httpClient.get<ComboboxItem[]>(`${this.baseUrl}/Conferences/ConferenceSubTypes`);
+  }
+
+  public getConferences(typeValue: number, subTypeValue: number) {
+    return this.httpClient.get<Conference[]>(`${this.baseUrl}/Conferences/Conferences`, {
+      params: {
+        typeValue,
+        subTypeValue,
+      },
+    });
   }
 
   public createConference(data: Conference) {

@@ -1,5 +1,38 @@
 <div class="flex flex-col flex-1">
   <div class="flex-row">
+    <tui-select
+      class="page-filter"
+      [formControl]="typeCtrl"
+      [valueContent]="taigaService.stringify(conferenceTypes, { value: 'value' })"
+    >
+      Тип
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button *ngFor="let item of conferenceTypes" tuiOption [value]="item.value">
+            {{ item.name }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-select>
+
+    <tui-select
+      *ngIf="typeCtrl.value === conferenceTypeValues.internal"
+      class="page-filter"
+      [formControl]="subTypeCtrl"
+      [valueContent]="taigaService.stringify(conferenceSubTypes, { value: 'value' })"
+    >
+      Підтип
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button *ngFor="let item of conferenceSubTypes" tuiOption [value]="item.value">
+            {{ item.name }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-select>
+
     <tui-input
       class="page-filter"
       icon="tuiIconSearch"
@@ -13,26 +46,13 @@
   </div>
 
   <div class="flex-row">
-    <button tuiButton size="m" appearance="outline" (click)="addConference()">
-      Додати
-    </button>
+    <button tuiButton size="m" appearance="outline" (click)="addConference()">Додати</button>
 
-    <button tuiButton size="m" appearance="outline" (click)="editConference()">
-      Редагувати
-    </button>
+    <button tuiButton size="m" appearance="outline" (click)="editConference()">Редагувати</button>
 
-    <button
-      tuiButton
-      size="m"
-      appearance="outline"
-      (click)="deleteConference()"
-    >
-      Видалити
-    </button>
+    <button tuiButton size="m" appearance="outline" (click)="deleteConference()">Видалити</button>
 
-    <button tuiButton size="m" appearance="outline" (click)="refresh()">
-      Оновити
-    </button>
+    <button tuiButton size="m" appearance="outline" (click)="refresh()">Оновити</button>
   </div>
 
   <div class="grid-wrapper">
