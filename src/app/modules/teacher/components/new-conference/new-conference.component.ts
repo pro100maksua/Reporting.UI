@@ -6,6 +6,7 @@ import {
   OnInit,
 } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import { lastValueFrom } from "rxjs";
@@ -98,7 +99,12 @@ export class NewConferenceComponent extends BaseComponent implements OnInit {
   }
 
   private setData() {
-    this.form.patchValue(this.dialogContext.data, { emitEvent: false });
+    const dateRange = new TuiDayRange(
+      TuiDay.fromLocalNativeDate(new Date(this.dialogContext.data.startDate)),
+      TuiDay.fromLocalNativeDate(new Date(this.dialogContext.data.endDate))
+    );
+
+    this.form.patchValue({ ...this.dialogContext.data, dateRange });
   }
 
   private subscribeToChanges() {
