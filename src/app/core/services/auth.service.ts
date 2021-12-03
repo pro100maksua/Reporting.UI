@@ -25,8 +25,7 @@ export class AuthService extends BaseService {
     super(httpClient, notificationsService, commonDialogService);
   }
 
-  public onLoggedInUserUpdated = () =>
-    this.loggedInUserUpdated as Observable<void>;
+  public onLoggedInUserUpdated = () => this.loggedInUserUpdated as Observable<void>;
 
   public refreshLoggedInUser() {
     this.loggedInUserUpdated.next();
@@ -79,6 +78,22 @@ export class AuthService extends BaseService {
     const token = localStorage.getItem("token");
 
     return new JwtHelperService().decodeToken(token)?.unique_name;
+  }
+
+  public getUserRoles(): number[] {
+    const token = localStorage.getItem("token");
+
+    const role = new JwtHelperService().decodeToken(token)?.role;
+
+    if (!role) {
+      return [];
+    }
+
+    if (role instanceof Array) {
+      return role?.map((r: string) => parseInt(r, 10));
+    }
+
+    return [parseInt(role, 10)];
   }
 
   public logout() {
