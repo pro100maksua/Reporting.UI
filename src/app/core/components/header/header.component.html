@@ -1,8 +1,24 @@
 <header class="app-header">
   <tui-tabs class="h-full">
-    <a class="text-base font-medium" tuiTab routerLink="/teacher" routerLinkActive=>Викладач</a>
-    <a class="text-base font-medium" tuiTab routerLink="/department" routerLinkActive>Кафедра</a>
-    <a class="text-base font-medium" tuiTab routerLink="/faculty" routerLinkActive>Факультет</a>
+    <a class="text-base font-medium" tuiTab routerLink="/teacher" routerLinkActive>Викладач</a>
+    <a
+      *ngIf="userRoles?.includes(role.Department)"
+      class="text-base font-medium"
+      tuiTab
+      routerLink="/department"
+      routerLinkActive
+    >
+      Кафедра
+    </a>
+    <a
+      *ngIf="userRoles?.includes(role.Faculty)"
+      class="text-base font-medium"
+      tuiTab
+      routerLink="/faculty"
+      routerLinkActive
+    >
+      Факультет
+    </a>
   </tui-tabs>
 
   <div class="ml-auto flex items-center gap-1">
