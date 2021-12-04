@@ -1,0 +1,44 @@
+<div class="flex flex-col gap-y-5" [formGroup]="form">
+  <tui-select
+    [valueContent]="taigaService.stringify(dialogContext.data.departments)"
+    formControlName="departmentId"
+  >
+    Кафедра
+
+    <ng-template tuiDataList>
+      <tui-data-list>
+        <button *ngFor="let item of dialogContext.data.departments" tuiOption [value]="item.id">
+          {{ item.name }}
+        </button>
+      </tui-data-list>
+    </ng-template>
+  </tui-select>
+
+  <tui-input-count formControlName="year">Рік</tui-input-count>
+
+  <div class="grid grid-cols-2 gap-2" formArrayName="reports">
+    <tui-checkbox-labeled
+      size="l"
+      *ngFor="let item of items; let i = index"
+      [formControl]="controls[i]"
+    >
+      {{ item.title }}
+    </tui-checkbox-labeled>
+  </div>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end mt-0">
+    <button
+      tuiButton
+      class="tui-form__button"
+      type="submit"
+      (click)="save()"
+      [disabled]="!form.valid || !isAnyReportSelected()"
+    >
+      Ок
+    </button>
+
+    <button tuiButton type="button" class="tui-form__button" appearance="flat" (click)="cancel()">
+      Скасувати
+    </button>
+  </div>
+</div>
