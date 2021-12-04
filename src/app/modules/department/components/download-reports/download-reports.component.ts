@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { FormArray, FormBuilder, FormControl } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, Validators } from "@angular/forms";
 import { BaseComponent } from "src/app/shared/components/base.component";
 
 @Component({
@@ -9,7 +9,12 @@ import { BaseComponent } from "src/app/shared/components/base.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadReportsComponent extends BaseComponent implements OnInit {
-  @Output() download = new EventEmitter<number[]>();
+  @Output() download = new EventEmitter<any>();
+
+  public yearCtrl = new FormControl(new Date().getFullYear(), [
+    Validators.required,
+    Validators.min(1),
+  ]);
 
   public form: FormArray;
 
@@ -61,10 +66,12 @@ export class DownloadReportsComponent extends BaseComponent implements OnInit {
   }
 
   public downloadReports() {
+    const year = this.yearCtrl.value;
+
     const selectedReports = this.items
       .filter((e, i) => e.value && this.controls[i].value)
       .map((e) => e.value);
 
-    this.download.emit(selectedReports);
+    this.download.emit({ reports: selectedReports, year });
   }
 }
