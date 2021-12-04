@@ -1,0 +1,48 @@
+<div class="flex flex-col flex-1">
+  <div class="flex-row">
+    <tui-select
+      class="page-filter"
+      [formControl]="departmentCtrl"
+      [valueContent]="taigaService.stringify(departments)"
+    >
+      Кафедра
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button *ngFor="let item of departments" tuiOption [value]="item.id">
+            {{ item.name }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-select>
+
+    <tui-input
+      class="page-filter"
+      icon="tuiIconSearch"
+      iconAlign="left"
+      [tuiTextfieldCleaner]="true"
+      [tuiTextfieldLabelOutside]="true"
+      [formControl]="searchCtrl"
+    >
+      Пошук
+    </tui-input>
+  </div>
+
+  <div class="flex-row">
+    <button tuiButton size="m" appearance="outline" (click)="editPublication()">Редагувати</button>
+
+    <button tuiButton size="m" appearance="outline" (click)="deletePublication()">Видалити</button>
+
+    <button tuiButton size="m" appearance="outline" (click)="refresh()">Оновити</button>
+  </div>
+
+  <div class="grid-wrapper">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      class="ag-theme-alpine"
+      [rowData]="publications"
+      [gridOptions]="gridOptions"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
