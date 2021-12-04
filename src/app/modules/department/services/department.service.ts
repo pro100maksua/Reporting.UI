@@ -65,12 +65,8 @@ export class DepartmentService extends BaseService {
     );
   }
 
-  public downloadDepartmentReports(reports: number[]) {
-    let params = new HttpParams();
-
-    for (const report of reports) {
-      params = params.append("reports", report);
-    }
+  public downloadDepartmentReports(reports: number[], year: number) {
+    const params = new HttpParams({ fromObject: { reports, year } });
 
     return this.httpClient.get(`${this.baseUrl}/Reports/DownloadDepartmentReports`, {
       params,
