@@ -22,13 +22,19 @@ export class DepartmentComponent {
     private loaderService: NgxUiLoaderService
   ) {}
 
-  public async downloadReports(reports: number[]) {
+  public async downloadReports({ reports, year }: { reports: number[]; year: number }) {
+    if (reports.length === 0) {
+      return;
+    }
+
     this.open = false;
 
     this.loaderService.start();
 
     try {
-      const file = await lastValueFrom(this.departmentService.downloadDepartmentReports(reports));
+      const file = await lastValueFrom(
+        this.departmentService.downloadDepartmentReports(reports, year)
+      );
 
       saveAs(file);
     } catch (err: any) {

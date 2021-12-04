@@ -1,4 +1,8 @@
 <div class="grid grid-cols-2 gap-2 p-2" style="width: 230px">
+  <tui-input-count class="col-span-2 mb-2" tuiTextfieldSize="m" [formControl]="yearCtrl">
+    Рік
+  </tui-input-count>
+
   <tui-checkbox-labeled *ngFor="let item of items; let i = index" [formControl]="controls[i]">
     {{ item.title }}
   </tui-checkbox-labeled>
@@ -9,6 +13,7 @@
     size="s"
     appearance="outline"
     (click)="downloadReports()"
+    [disabled]="!yearCtrl.valid"
   >
     Ок
   </button>

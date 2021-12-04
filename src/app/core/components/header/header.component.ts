@@ -11,6 +11,7 @@ import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { DialogResult } from "../../models/dialog-result";
+import { Role } from "../../models/role";
 import { User } from "../../models/user";
 import { AuthService } from "../../services/auth.service";
 import { UpdateUserComponent } from "../update-user/update-user.component";
@@ -23,6 +24,9 @@ import { UpdateUserComponent } from "../update-user/update-user.component";
 })
 export class HeaderComponent extends BaseComponent implements OnInit {
   public user: User;
+
+  public role = Role;
+  public userRoles: number[];
 
   public open = false;
 
@@ -45,19 +49,18 @@ export class HeaderComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userRoles = this.authService.getUserRoles();
+
     this.subscribeToChanges();
   }
 
   private updateUserInfo() {
     this.dialogService
-      .open<DialogResult>(
-        new PolymorpheusComponent(UpdateUserComponent, this.injector),
-        {
-          closeable: false,
-          size: "m",
-          data: { ...this.user },
-        }
-      )
+      .open<DialogResult>(new PolymorpheusComponent(UpdateUserComponent, this.injector), {
+        closeable: false,
+        size: "m",
+        data: { ...this.user },
+      })
       .subscribe();
   }
 
