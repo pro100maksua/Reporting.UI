@@ -4,18 +4,20 @@ import {
   Component,
   Inject,
   Injector,
+  Input,
   OnInit,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { TuiDialogService } from "@taiga-ui/core";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { GridApi, GridOptions, RowSelectedEvent } from "ag-grid-community";
-import { saveAs } from "file-saver";
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { lastValueFrom } from "rxjs";
 import { DialogResult } from "src/app/core/models/dialog-result";
 import { AuthService } from "src/app/core/services/auth.service";
 import { CommonDialogService } from "src/app/core/services/common-dialog.service";
+import { TaigaService } from "src/app/core/services/taiga.service";
+import { Department } from "src/app/modules/auth/models/department";
 import { Publication } from "src/app/modules/teacher/models/publication";
 import { BaseComponent } from "src/app/shared/components/base.component";
 import { FacultyService } from "../../services/faculty.service";
@@ -28,6 +30,9 @@ import { NewPublicationComponent } from "../new-publication/new-publication.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PublicationsComponent extends BaseComponent implements OnInit {
+  @Input() departments: Department[] = [];
+
+  public departmentCtrl = new FormControl();
   public searchCtrl = new FormControl();
 
   public publications: Publication[] = [];
@@ -105,6 +110,7 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
     private facultyService: FacultyService,
     private commonDialogService: CommonDialogService,
     private loaderService: NgxUiLoaderService,
+    public taigaService: TaigaService,
     @Inject(TuiDialogService) private dialogService: TuiDialogService,
     @Inject(Injector) private injector: Injector,
     private cdr: ChangeDetectorRef
@@ -155,7 +161,8 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   }
 
   public async refresh() {
-    this.searchCtrl.patchValue(null);
+    this.departmentCtrl.patchValue(null, { emitEvent: false });
+    this.searchCtrl.patchValue(null, { emitEvent: false });
 
     this.getPublications();
   }
@@ -170,7 +177,9 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
 
   private async getPublications() {
     try {
-      this.publications = await lastValueFrom(this.facultyService.getDepartmentPublications());
+      this.publications = await lastValueFrom(
+        this.facultyService.getFacultyPublications(this.departmentCtrl.value)
+      );
 
       if (this.selectedPublication) {
         this.selectedPublication = this.publications.find(
@@ -193,6 +202,10 @@ export class PublicationsComponent extends BaseComponent implements OnInit {
   }
 
   private subscribeToChanges() {
+    this.departmentCtrl.valueChanges
+      .pipe(this.takeUntilDestroy())
+      .subscribe(() => this.getPublications());
+
     this.searchCtrl.valueChanges.pipe(this.takeUntilDestroy()).subscribe((search) => {
       this.resetPublicationsSelection();
 

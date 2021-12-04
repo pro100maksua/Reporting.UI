@@ -1,5 +1,21 @@
 <div class="flex flex-col flex-1">
   <div class="flex-row">
+    <tui-select
+      class="page-filter"
+      [formControl]="departmentCtrl"
+      [valueContent]="taigaService.stringify(departments)"
+    >
+      Кафедра
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button *ngFor="let item of departments" tuiOption [value]="item.id">
+            {{ item.name }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-select>
+
     <tui-input
       class="page-filter"
       icon="tuiIconSearch"

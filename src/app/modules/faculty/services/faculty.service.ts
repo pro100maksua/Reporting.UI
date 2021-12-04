@@ -21,10 +21,10 @@ export class FacultyService extends BaseService {
     return this.httpClient.get<ComboboxItem[]>(`${this.baseUrl}/Publications/PublicationTypes`);
   }
 
-  public getDepartmentPublications() {
-    return this.httpClient.get<Publication[]>(
-      `${this.baseUrl}/Publications/DepartmentPublications`
-    );
+  public getFacultyPublications(departmentId: number) {
+    return this.httpClient.get<Publication[]>(`${this.baseUrl}/Publications/FacultyPublications`, {
+      params: { departmentId },
+    });
   }
 
   public updatePublication(id: number, data: NewPublication) {
