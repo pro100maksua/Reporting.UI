@@ -1,0 +1,14 @@
+<div class="flex-row">
+  <button tuiButton size="m" appearance="outline" (click)="openDownloadReportsDialog()">
+    Завантажити додаток
+  </button>
+</div>
+
+<tui-tabs class="mb-4" [(activeItemIndex)]="tabIndex">
+  <button tuiTab>Публікації</button>
+</tui-tabs>
+
+<app-publications
+  class="flex-1 flex-col"
+  [ngStyle]="{ display: tabIndex === 0 ? 'flex' : 'none' }"
+></app-publications>
